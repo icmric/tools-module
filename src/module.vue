@@ -1,21 +1,22 @@
 <template>
-	<private-view :title="page_title">
-		
-		<template #navigation>
-			<page-navigation :current="page" :pages="all_pages" />
-		</template>
+    <private-view :title="page_title">
+        
+        <template #navigation>
+            <page-navigation :current="page" :pages="all_pages" />
+        </template>
 
-		<router-view name="tools-module" :page="page" />
-		<div v-if="page_body" v-html="page_body"></div>
+        <router-view name="tools-module" :page="page" />
+        <div v-if="page_body" v-html="page_body" class="page-body"></div>
 
-		<div v-for="origin in testSet" :key="origin">
-			<textarea v-model="formData[origin]" :placeholder="origin"></textarea>
-		</div>
-		
-		<button @click="submitForm">Submit</button>
+        <div v-for="origin in testSet" :key="origin" class="form-group">
+            <label :for="origin">{{ origin }}</label>
+            <textarea v-model="formData[origin]" :placeholder="origin" :id="origin" class="form-control"></textarea>
+        </div>
+        
+        <button @click="submitForm" class="btn btn-primary">Submit</button>
 
-		<pre class="wrapped-pre">{{  rspJsonStr  }}</pre>
-	</private-view>
+        <pre class="wrapped-pre">{{ rspJsonStr }}</pre>
+    </private-view>
 </template>
 
 <script>
@@ -49,6 +50,7 @@ export default {
 		]);
 		const all_pages = ref([]);
 		let rspJsonStr = ref("");
+		let rawPageName = "";
 		
 		render_page(props.page);
 		fetch_all_pages();
@@ -98,12 +100,14 @@ export default {
 			formData.value = {};
 			testSet.clear();
 			rspJsonStr.value = "";
+			rawPageName = "";
 
 
 			api.get(`/items/api_parents?fields=*,api.*&filter[title][_eq]=${page}`).then((rsp) => {
 				if (rsp.data.data) {
 					rsp.data.data.forEach(item => {
-						page_title.value = item.title;
+						rawPageName = item.title;
+						page_title.value = transformTitle(item.title);
 						page_body.value = item.description;
 						recursiveFind(rsp.data.data[0]);
 					});
@@ -120,7 +124,7 @@ export default {
 				all_pages.value = [];
 				rsp.data.data.forEach(item => {
 					all_pages.value.push({
-						label: item.title,
+						label: transformTitle(item.title),
 						to: `/tools-module/${item.title}`,
 						color: item.color,
 						icon: 'upload',
@@ -130,6 +134,11 @@ export default {
 				console.log(error);
 			});
 		}
+
+		function transformTitle(title) {
+            title = title.replace(/-/g, ' ');
+            return title.charAt(0).toUpperCase() + title.slice(1);
+        }
 
 		function parse_placeholders(text) {
 			const regex = /{(.*?)}/g; // Non-greedy match
@@ -166,7 +175,7 @@ export default {
 		}
 
 		function buildApiUrl() {
-			let url = '/tools/' + page_title.value;
+			let url = '/tools/' + rawPageName;
 			if (Object.keys(formData.value).length > 0) {
 				url += '?';
 				Object.keys(formData.value).forEach((key, index) => {
@@ -184,10 +193,58 @@ export default {
 </script>
 
 <style scoped>
+.page-body {
+    padding: 20px;
+    background-color: #0d1117;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background-color: #6644ff;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #5238c6;
+}
+
 .wrapped-pre {
-    white-space: pre-wrap; /* CSS3 */
-    word-wrap: break-word; /* IE 5.5-7 */
-    overflow-wrap: break-word; /* CSS3 */
-    max-width: 100%; /* Adjust as needed */
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    background-color: #0d1117;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 20px;
 }
 </style>
