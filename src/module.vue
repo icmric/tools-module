@@ -97,6 +97,7 @@ export default {
 			// Reset form fields and form data
 			formData.value = {};
 			testSet.clear();
+			rspJsonStr.value = "";
 
 
 			api.get(`/items/api_parents?fields=*,api.*&filter[title][_eq]=${page}`).then((rsp) => {
