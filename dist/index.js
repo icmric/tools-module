@@ -1,4 +1,4 @@
-import { resolveComponent, openBlock, createBlock, withCtx, createElementBlock, Fragment, renderList, createVNode, createCommentVNode, ref, watch, createSlots, withDirectives, createElementVNode, vModelText } from 'vue';
+import { resolveComponent, openBlock, createBlock, withCtx, createElementBlock, Fragment, renderList, createVNode, createCommentVNode, ref, watch, withDirectives, createElementVNode, vModelText, toDisplayString } from 'vue';
 import { useApi } from '@directus/extensions-sdk';
 import { useRouter } from 'vue-router';
 
@@ -74,6 +74,11 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
 }
 var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_render$1],['__file',"navigation.vue"]]);
 
+var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
+
+var css = "\n.wrapped-pre[data-v-5027b710] {\n    white-space: pre-wrap; /* CSS3 */\n    word-wrap: break-word; /* IE 5.5-7 */\n    overflow-wrap: break-word; /* CSS3 */\n    max-width: 100%; /* Adjust as needed */\n}\n";
+n(css,{});
+
 const _sfc_main = {
 	components: {
 		PageNavigation,
@@ -89,7 +94,6 @@ const _sfc_main = {
 		const api = useApi();
 		const page_title = ref('');
 		const page_body = ref('');
-		const form_fields = ref({});
 		const formData = ref({});
 		let testSet = new Set();
 		const breadcrumb = ref([
@@ -99,6 +103,7 @@ const _sfc_main = {
 			},
 		]);
 		const all_pages = ref([]);
+		let rspJsonStr = ref("");
 		
 		render_page(props.page);
 		fetch_all_pages();
@@ -111,29 +116,26 @@ const _sfc_main = {
 			}
 		);
 
-		return { page_title, page_body, breadcrumb, all_pages, form_fields, formData, testSet, submitForm, };
+		return { page_title, page_body, breadcrumb, all_pages, formData, testSet, rspJsonStr, submitForm, };
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
-				for (let i = 0; i < keys.length; i++) {
-					if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
-						//console.log("Recursing at " + obj[keys[i]]);
-						recursiveFind(obj[keys[i]]);	
-					} else {
-						let parseResult = parse_placeholders(obj[keys[i]]);
-						if (parseResult != null) {
-							for (let j = 0; j < parseResult.length; j++) {
-								if (recursiveFindIncludesCheck(parseResult[j]) == true) {
-									//console.log(keys[i] + " " + parseResult[j]);
-									testSet.add(parseResult[j]);
-								}
+			for (let i = 0; i < keys.length; i++) {
+				if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
+					//console.log("Recursing at " + obj[keys[i]]);
+					recursiveFind(obj[keys[i]]);	
+				} else {
+					let parseResult = parse_placeholders(obj[keys[i]]);
+					if (parseResult != null) {
+						for (let j = 0; j < parseResult.length; j++) {
+							if (recursiveFindIncludesCheck(parseResult[j]) == true) {
+								//console.log(keys[i] + " " + parseResult[j]);
+								testSet.add(parseResult[j]);
 							}
 						}
 					}
-					if (i == keys.length - 1) {
-						form_fields.value[keys[i]] = obj[keys[i]];
-					}
 				}
+			}
 		}
 
 		function recursiveFindIncludesCheck(objToCheck) {
@@ -148,7 +150,6 @@ const _sfc_main = {
 
 		async function render_page(page) {
 			// Reset form fields and form data
-			form_fields.value = {};
 			formData.value = {};
 			testSet.clear();
 
@@ -159,15 +160,6 @@ const _sfc_main = {
 						page_title.value = item.title;
 						page_body.value = item.description;
 						recursiveFind(rsp.data.data[0]);
-						// const placeholders = parse_placeholders(item.main);
-						// if (placeholders.length) {
-						// 	form_fields.value['main'] = placeholders;
-						// 	placeholders.forEach(field => {
-						// 		if (!formData.value[field]) {
-						// 			formData.value[field] = '';
-						// 		}
-						// 	});
-						// }
 					});
 				} else {
 					page_title.value = "404: Not Found";
@@ -208,21 +200,51 @@ const _sfc_main = {
 		}
 
 		function submitForm() {
-			console.log(formData.value);
+			rspJsonStr.value = "...";
+			let testReturn = {};
+			testReturn = formData.value;
+			let tempKeys = Object.keys(testReturn);
+			let keyToUse = tempKeys[0];
+			console.log("title: " + page_title.value);
+			console.log("value: " + testReturn[keyToUse] + " key: " + keyToUse);
+			console.log(buildApiUrl());
+			
+			api.get(buildApiUrl()).then((rsp) => {
+				let jsonRsp = rsp.data;
+				rspJsonStr.value = jsonRsp;
+				console.log(rsp.data);
+				console.log(rspJsonStr.value);
+			}).catch((error) => {
+				console.log(error);
+			});
+		}
+
+		function buildApiUrl() {
+			let url = '/tools/' + page_title.value;
+			if (Object.keys(formData.value).length > 0) {
+				url += '?';
+				Object.keys(formData.value).forEach((key, index) => {
+					url += `${key}=${formData.value[key]}`;
+					if (index < Object.keys(formData.value).length - 1) {
+						url += '&';
+					}
+				});
+			}
+			// Remove this when transitioning to POST request??
+			return url.replace("$url.", "");
 		}
 	},
 };
-
 const _hoisted_1 = ["innerHTML"];
 const _hoisted_2 = ["onUpdate:modelValue", "placeholder"];
+const _hoisted_3 = { class: "wrapped-pre" };
 
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_v_breadcrumb = resolveComponent("v-breadcrumb");
   const _component_page_navigation = resolveComponent("page-navigation");
   const _component_router_view = resolveComponent("router-view");
   const _component_private_view = resolveComponent("private-view");
 
-  return (openBlock(), createBlock(_component_private_view, { title: $setup.page_title }, createSlots({
+  return (openBlock(), createBlock(_component_private_view, { title: $setup.page_title }, {
     navigation: withCtx(() => [
       createVNode(_component_page_navigation, {
         current: $props.page,
@@ -252,22 +274,13 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       }), 128 /* KEYED_FRAGMENT */)),
       createElementVNode("button", {
         onClick: _cache[0] || (_cache[0] = (...args) => ($setup.submitForm && $setup.submitForm(...args)))
-      }, "Submit")
+      }, "Submit"),
+      createElementVNode("pre", _hoisted_3, toDisplayString($setup.rspJsonStr), 1 /* TEXT */)
     ]),
-    _: 2 /* DYNAMIC */
-  }, [
-    ($setup.breadcrumb)
-      ? {
-          name: "headline",
-          fn: withCtx(() => [
-            createVNode(_component_v_breadcrumb, { items: $setup.breadcrumb }, null, 8 /* PROPS */, ["items"])
-          ]),
-          key: "0"
-        }
-      : undefined
-  ]), 1032 /* PROPS, DYNAMIC_SLOTS */, ["title"]))
+    _: 1 /* STABLE */
+  }, 8 /* PROPS */, ["title"]))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-5027b710"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',

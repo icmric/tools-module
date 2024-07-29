@@ -1,11 +1,10 @@
 <template>
 	<private-view :title="page_title">
-		<template v-if="breadcrumb" #headline>
-			<v-breadcrumb :items="breadcrumb" />
-		</template>
+		
 		<template #navigation>
 			<page-navigation :current="page" :pages="all_pages" />
 		</template>
+
 		<router-view name="tools-module" :page="page" />
 		<div v-if="page_body" v-html="page_body"></div>
 
@@ -14,6 +13,8 @@
 		</div>
 		
 		<button @click="submitForm">Submit</button>
+
+		<pre class="wrapped-pre">{{  rspJsonStr  }}</pre>
 	</private-view>
 </template>
 
@@ -38,7 +39,6 @@ export default {
 		const api = useApi();
 		const page_title = ref('');
 		const page_body = ref('');
-		const form_fields = ref({});
 		const formData = ref({});
 		let testSet = new Set();
 		const breadcrumb = ref([
@@ -48,6 +48,7 @@ export default {
 			},
 		]);
 		const all_pages = ref([]);
+		let rspJsonStr = ref("");
 		
 		render_page(props.page);
 		fetch_all_pages();
@@ -60,29 +61,26 @@ export default {
 			}
 		);
 
-		return { page_title, page_body, breadcrumb, all_pages, form_fields, formData, testSet, submitForm, };
+		return { page_title, page_body, breadcrumb, all_pages, formData, testSet, rspJsonStr, submitForm, };
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
-				for (let i = 0; i < keys.length; i++) {
-					if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
-						//console.log("Recursing at " + obj[keys[i]]);
-						recursiveFind(obj[keys[i]]);	
-					} else {
-						let parseResult = parse_placeholders(obj[keys[i]]);
-						if (parseResult != null) {
-							for (let j = 0; j < parseResult.length; j++) {
-								if (recursiveFindIncludesCheck(parseResult[j]) == true) {
-									//console.log(keys[i] + " " + parseResult[j]);
-									testSet.add(parseResult[j]);
-								}
+			for (let i = 0; i < keys.length; i++) {
+				if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
+					//console.log("Recursing at " + obj[keys[i]]);
+					recursiveFind(obj[keys[i]]);	
+				} else {
+					let parseResult = parse_placeholders(obj[keys[i]]);
+					if (parseResult != null) {
+						for (let j = 0; j < parseResult.length; j++) {
+							if (recursiveFindIncludesCheck(parseResult[j]) == true) {
+								//console.log(keys[i] + " " + parseResult[j]);
+								testSet.add(parseResult[j]);
 							}
 						}
 					}
-					if (i == keys.length - 1) {
-						form_fields.value[keys[i]] = obj[keys[i]];
-					}
 				}
+			}
 		}
 
 		function recursiveFindIncludesCheck(objToCheck) {
@@ -97,7 +95,6 @@ export default {
 
 		async function render_page(page) {
 			// Reset form fields and form data
-			form_fields.value = {};
 			formData.value = {};
 			testSet.clear();
 
@@ -108,15 +105,6 @@ export default {
 						page_title.value = item.title;
 						page_body.value = item.description;
 						recursiveFind(rsp.data.data[0]);
-						// const placeholders = parse_placeholders(item.main);
-						// if (placeholders.length) {
-						// 	form_fields.value['main'] = placeholders;
-						// 	placeholders.forEach(field => {
-						// 		if (!formData.value[field]) {
-						// 			formData.value[field] = '';
-						// 		}
-						// 	});
-						// }
 					});
 				} else {
 					page_title.value = "404: Not Found";
@@ -157,8 +145,48 @@ export default {
 		}
 
 		function submitForm() {
-			console.log(formData.value);
+			rspJsonStr.value = "...";
+			let testReturn = {};
+			testReturn = formData.value;
+			let tempKeys = Object.keys(testReturn);
+			let keyToUse = tempKeys[0];
+			console.log("title: " + page_title.value);
+			console.log("value: " + testReturn[keyToUse] + " key: " + keyToUse);
+			console.log(buildApiUrl());
+			
+			api.get(buildApiUrl()).then((rsp) => {
+				let jsonRsp = rsp.data;
+				rspJsonStr.value = jsonRsp;
+				console.log(rsp.data);
+				console.log(rspJsonStr.value);
+			}).catch((error) => {
+				console.log(error);
+			});
+		}
+
+		function buildApiUrl() {
+			let url = '/tools/' + page_title.value;
+			if (Object.keys(formData.value).length > 0) {
+				url += '?';
+				Object.keys(formData.value).forEach((key, index) => {
+					url += `${key}=${formData.value[key]}`;
+					if (index < Object.keys(formData.value).length - 1) {
+						url += '&';
+					}
+				});
+			}
+			// Remove this when transitioning to POST request??
+			return url.replace("$url.", "");
 		}
 	},
 };
 </script>
+
+<style scoped>
+.wrapped-pre {
+    white-space: pre-wrap; /* CSS3 */
+    word-wrap: break-word; /* IE 5.5-7 */
+    overflow-wrap: break-word; /* CSS3 */
+    max-width: 100%; /* Adjust as needed */
+}
+</style>
