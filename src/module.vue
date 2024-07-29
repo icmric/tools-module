@@ -9,15 +9,10 @@
 		<router-view name="tools-module" :page="page" />
 		<div v-if="page_body" v-html="page_body"></div>
 
-		<div v-if="Object.keys(form_fields).length">
-			<div v-for="(fields, origin) in form_fields" :key="origin">
-				<h3>{{ origin }}</h3>
-				<div v-for="field in fields" :key="field">
-					<input v-model="formData[field]" :placeholder="field" />
-				</div>
-			</div>
+		<div v-for="origin in testSet" :key="origin">
+			<textarea v-model="formData[origin]" :placeholder="origin"></textarea>
 		</div>
-
+		
 		<button @click="submitForm">Submit</button>
 	</private-view>
 </template>
@@ -45,6 +40,7 @@ export default {
 		const page_body = ref('');
 		const form_fields = ref({});
 		const formData = ref({});
+		let testSet = new Set();
 		const breadcrumb = ref([
 			{
 				name: 'Home',
@@ -52,38 +48,75 @@ export default {
 			},
 		]);
 		const all_pages = ref([]);
-
+		
 		render_page(props.page);
 		fetch_all_pages();
-
+		
 		watch(
 			() => props.page,
-			() => {
+			async () => {
 				render_page(props.page);
+				console.log(testSet);
 			}
 		);
 
-		return { page_title, page_body, breadcrumb, all_pages, form_fields, formData, submitForm };
+		return { page_title, page_body, breadcrumb, all_pages, form_fields, formData, testSet, submitForm, };
 
-		function render_page(page) {
+		function recursiveFind(obj) {
+			let keys = Object.keys(obj);
+				for (let i = 0; i < keys.length; i++) {
+					if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
+						//console.log("Recursing at " + obj[keys[i]]);
+						recursiveFind(obj[keys[i]]);	
+					} else {
+						let parseResult = parse_placeholders(obj[keys[i]]);
+						if (parseResult != null) {
+							for (let j = 0; j < parseResult.length; j++) {
+								if (recursiveFindIncludesCheck(parseResult[j]) == true) {
+									//console.log(keys[i] + " " + parseResult[j]);
+									testSet.add(parseResult[j]);
+								}
+							}
+						}
+					}
+					if (i == keys.length - 1) {
+						form_fields.value[keys[i]] = obj[keys[i]];
+					}
+				}
+		}
+
+		function recursiveFindIncludesCheck(objToCheck) {
+			let valuesToCheck = ["reqAccountability", "$tool", "apiResponse"];
+			for (let i = 0; i < valuesToCheck.length; i++) {
+				if (objToCheck.includes(valuesToCheck[i])) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		async function render_page(page) {
 			// Reset form fields and form data
 			form_fields.value = {};
 			formData.value = {};
+			testSet.clear();
 
-			api.get(`/items/api_parents?fields=title,description,main&filter[title][_eq]=${page}`).then((rsp) => {
+
+			api.get(`/items/api_parents?fields=*,api.*&filter[title][_eq]=${page}`).then((rsp) => {
 				if (rsp.data.data) {
 					rsp.data.data.forEach(item => {
 						page_title.value = item.title;
 						page_body.value = item.description;
-						const placeholders = parse_placeholders(item.main);
-						if (placeholders.length) {
-							form_fields.value['main'] = placeholders;
-							placeholders.forEach(field => {
-								if (!formData.value[field]) {
-									formData.value[field] = '';
-								}
-							});
-						}
+						recursiveFind(rsp.data.data[0]);
+						// const placeholders = parse_placeholders(item.main);
+						// if (placeholders.length) {
+						// 	form_fields.value['main'] = placeholders;
+						// 	placeholders.forEach(field => {
+						// 		if (!formData.value[field]) {
+						// 			formData.value[field] = '';
+						// 		}
+						// 	});
+						// }
 					});
 				} else {
 					page_title.value = "404: Not Found";
@@ -116,13 +149,15 @@ export default {
 			while ((match = regex.exec(text)) !== null) {
 				placeholders.push(match[1]);
 			}
-			console.log(placeholders);
-			return placeholders;
+			if (placeholders.length <= 0) {
+				return null;
+			} else {
+				return placeholders;
+			}
 		}
 
 		function submitForm() {
 			console.log(formData.value);
-			// Handle form submission
 		}
 	},
 };

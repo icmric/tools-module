@@ -1,4 +1,4 @@
-import { resolveComponent, openBlock, createBlock, withCtx, createElementBlock, Fragment, renderList, createVNode, createCommentVNode, ref, watch, createSlots, createElementVNode, toDisplayString, withDirectives, vModelText } from 'vue';
+import { resolveComponent, openBlock, createBlock, withCtx, createElementBlock, Fragment, renderList, createVNode, createCommentVNode, ref, watch, createSlots, withDirectives, createElementVNode, vModelText } from 'vue';
 import { useApi } from '@directus/extensions-sdk';
 import { useRouter } from 'vue-router';
 
@@ -91,6 +91,7 @@ const _sfc_main = {
 		const page_body = ref('');
 		const form_fields = ref({});
 		const formData = ref({});
+		let testSet = new Set();
 		const breadcrumb = ref([
 			{
 				name: 'Home',
@@ -98,38 +99,75 @@ const _sfc_main = {
 			},
 		]);
 		const all_pages = ref([]);
-
+		
 		render_page(props.page);
 		fetch_all_pages();
-
+		
 		watch(
 			() => props.page,
-			() => {
+			async () => {
 				render_page(props.page);
+				console.log(testSet);
 			}
 		);
 
-		return { page_title, page_body, breadcrumb, all_pages, form_fields, formData, submitForm };
+		return { page_title, page_body, breadcrumb, all_pages, form_fields, formData, testSet, submitForm, };
 
-		function render_page(page) {
+		function recursiveFind(obj) {
+			let keys = Object.keys(obj);
+				for (let i = 0; i < keys.length; i++) {
+					if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
+						//console.log("Recursing at " + obj[keys[i]]);
+						recursiveFind(obj[keys[i]]);	
+					} else {
+						let parseResult = parse_placeholders(obj[keys[i]]);
+						if (parseResult != null) {
+							for (let j = 0; j < parseResult.length; j++) {
+								if (recursiveFindIncludesCheck(parseResult[j]) == true) {
+									//console.log(keys[i] + " " + parseResult[j]);
+									testSet.add(parseResult[j]);
+								}
+							}
+						}
+					}
+					if (i == keys.length - 1) {
+						form_fields.value[keys[i]] = obj[keys[i]];
+					}
+				}
+		}
+
+		function recursiveFindIncludesCheck(objToCheck) {
+			let valuesToCheck = ["reqAccountability", "$tool", "apiResponse"];
+			for (let i = 0; i < valuesToCheck.length; i++) {
+				if (objToCheck.includes(valuesToCheck[i])) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		async function render_page(page) {
 			// Reset form fields and form data
 			form_fields.value = {};
 			formData.value = {};
+			testSet.clear();
 
-			api.get(`/items/api_parents?fields=title,description,main&filter[title][_eq]=${page}`).then((rsp) => {
+
+			api.get(`/items/api_parents?fields=*,api.*&filter[title][_eq]=${page}`).then((rsp) => {
 				if (rsp.data.data) {
 					rsp.data.data.forEach(item => {
 						page_title.value = item.title;
 						page_body.value = item.description;
-						const placeholders = parse_placeholders(item.main);
-						if (placeholders.length) {
-							form_fields.value['main'] = placeholders;
-							placeholders.forEach(field => {
-								if (!formData.value[field]) {
-									formData.value[field] = '';
-								}
-							});
-						}
+						recursiveFind(rsp.data.data[0]);
+						// const placeholders = parse_placeholders(item.main);
+						// if (placeholders.length) {
+						// 	form_fields.value['main'] = placeholders;
+						// 	placeholders.forEach(field => {
+						// 		if (!formData.value[field]) {
+						// 			formData.value[field] = '';
+						// 		}
+						// 	});
+						// }
 					});
 				} else {
 					page_title.value = "404: Not Found";
@@ -162,20 +200,21 @@ const _sfc_main = {
 			while ((match = regex.exec(text)) !== null) {
 				placeholders.push(match[1]);
 			}
-			console.log(placeholders);
-			return placeholders;
+			if (placeholders.length <= 0) {
+				return null;
+			} else {
+				return placeholders;
+			}
 		}
 
 		function submitForm() {
 			console.log(formData.value);
-			// Handle form submission
 		}
 	},
 };
 
 const _hoisted_1 = ["innerHTML"];
-const _hoisted_2 = { key: 1 };
-const _hoisted_3 = ["onUpdate:modelValue", "placeholder"];
+const _hoisted_2 = ["onUpdate:modelValue", "placeholder"];
 
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_v_breadcrumb = resolveComponent("v-breadcrumb");
@@ -201,25 +240,16 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
             innerHTML: $setup.page_body
           }, null, 8 /* PROPS */, _hoisted_1))
         : createCommentVNode("v-if", true),
-      (Object.keys($setup.form_fields).length)
-        ? (openBlock(), createElementBlock("div", _hoisted_2, [
-            (openBlock(true), createElementBlock(Fragment, null, renderList($setup.form_fields, (fields, origin) => {
-              return (openBlock(), createElementBlock("div", { key: origin }, [
-                createElementVNode("h3", null, toDisplayString(origin), 1 /* TEXT */),
-                (openBlock(true), createElementBlock(Fragment, null, renderList(fields, (field) => {
-                  return (openBlock(), createElementBlock("div", { key: field }, [
-                    withDirectives(createElementVNode("input", {
-                      "onUpdate:modelValue": $event => (($setup.formData[field]) = $event),
-                      placeholder: field
-                    }, null, 8 /* PROPS */, _hoisted_3), [
-                      [vModelText, $setup.formData[field]]
-                    ])
-                  ]))
-                }), 128 /* KEYED_FRAGMENT */))
-              ]))
-            }), 128 /* KEYED_FRAGMENT */))
-          ]))
-        : createCommentVNode("v-if", true),
+      (openBlock(true), createElementBlock(Fragment, null, renderList($setup.testSet, (origin) => {
+        return (openBlock(), createElementBlock("div", { key: origin }, [
+          withDirectives(createElementVNode("textarea", {
+            "onUpdate:modelValue": $event => (($setup.formData[origin]) = $event),
+            placeholder: origin
+          }, null, 8 /* PROPS */, _hoisted_2), [
+            [vModelText, $setup.formData[origin]]
+          ])
+        ]))
+      }), 128 /* KEYED_FRAGMENT */)),
       createElementVNode("button", {
         onClick: _cache[0] || (_cache[0] = (...args) => ($setup.submitForm && $setup.submitForm(...args)))
       }, "Submit")
