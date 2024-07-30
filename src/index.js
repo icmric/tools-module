@@ -3,7 +3,7 @@ import ModuleComponent from './module.vue';
 export default {
 	id: 'tools-module',
 	name: 'Tools',
-	icon: 'box',
+	icon: 'build',
 	routes: [
 		{
 			path: '',

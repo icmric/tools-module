@@ -1,6 +1,6 @@
 {
 	"name": "tools-module",
-	"description": "Please enter a description for your extension",
+	"description": "A GUI for interacting with pre defined tools",
 	"icon": "extension",
 	"version": "1.0.0",
 	"keywords": [

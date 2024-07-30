@@ -13,7 +13,7 @@
             <textarea v-model="formData[origin]" :placeholder="origin" :id="origin" class="form-control"></textarea>
         </div>
         
-        <button @click="submitForm" class="btn btn-primary">Submit</button>
+        <button v-if="!isHomePage" @click="submitForm" class="btn btn-primary">Submit</button>
 
         <pre class="wrapped-pre">{{ rspJsonStr }}</pre>
     </private-view>
@@ -34,6 +34,11 @@ export default {
 			type: String,
 			default: 'home',
 		},
+	},
+	computed: {
+		isHomePage() {
+			return this.$props.page === 'home';
+		}
 	},
 	setup(props) {
 		const router = useRouter();
@@ -102,21 +107,25 @@ export default {
 			rspJsonStr.value = "";
 			rawPageName = "";
 
-
-			api.get(`/items/api_parents?fields=*,api.*&filter[title][_eq]=${page}`).then((rsp) => {
-				if (rsp.data.data) {
-					rsp.data.data.forEach(item => {
-						rawPageName = item.title;
-						page_title.value = transformTitle(item.title);
-						page_body.value = item.description;
-						recursiveFind(rsp.data.data[0]);
-					});
-				} else {
-					page_title.value = "404: Not Found";
-				}
-			}).catch((error) => {
-				console.log(error);
-			});
+			if (page === 'home') {
+				page_title.value = 'Tools';
+				page_body.value = 'Please select a tool on the left to get started!';
+			} else {
+				api.get(`/items/api_parents?fields=*,api.*&filter[title][_eq]=${page}`).then((rsp) => {
+					if (rsp.data.data) {
+						rsp.data.data.forEach(item => {
+							rawPageName = item.title;
+							page_title.value = transformTitle(item.title);
+							page_body.value = item.description;
+							recursiveFind(rsp.data.data[0]);
+						});
+					} else {
+						page_title.value = "404: Not Found";
+					}
+				}).catch((error) => {
+					console.log(error);
+				});
+			}
 		}
 
 		function fetch_all_pages() {
@@ -127,7 +136,6 @@ export default {
 						label: transformTitle(item.title),
 						to: `/tools-module/${item.title}`,
 						color: item.color,
-						icon: 'upload',
 					});
 				});
 			}).catch((error) => {
@@ -161,7 +169,7 @@ export default {
 				"body": formData.value,
 			};
 			console.log(postReqData);
-			api.post('/tools/example-magazine-intro', postReqData).then((rsp) => {
+			api.post(buildApiUrl(), postReqData).then((rsp) => {
 				let jsonRsp = rsp.data;
 				rspJsonStr.value = jsonRsp;
 				console.log(rsp.data);
@@ -173,6 +181,8 @@ export default {
 
 		function buildApiUrl() {
 			let url = '/tools/' + rawPageName;
+			/*
+			// only used for GET requests
 			if (Object.keys(formData.value).length > 0) {
 				url += '?';
 				Object.keys(formData.value).forEach((key, index) => {
@@ -181,8 +191,8 @@ export default {
 						url += '&';
 					}
 				});
-			}
-			// Remove this when transitioning to POST request??
+			}*/
+			// .replace only used when making GET request from here
 			return url.replace("$url.", "");
 		}
 	},

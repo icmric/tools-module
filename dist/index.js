@@ -76,7 +76,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-0d4fb9c3] {\n    padding: 20px;\n    background-color: #0d1117;\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-0d4fb9c3] {\n    margin-bottom: 15px;\n}\n.form-group label[data-v-0d4fb9c3] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: bold;\n}\n.form-control[data-v-0d4fb9c3] {\n    width: 100%;\n    padding: 10px;\n    border: 1px solid #ccc;\n    border-radius: 4px;\n}\n.btn[data-v-0d4fb9c3] {\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n}\n.btn-primary[data-v-0d4fb9c3] {\n    background-color: #6644ff;\n    color: white;\n    border: none;\n}\n.btn-primary[data-v-0d4fb9c3]:hover {\n    background-color: #5238c6;\n}\n.wrapped-pre[data-v-0d4fb9c3] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n";
+var css = "\n.page-body[data-v-b40f638e] {\n    padding: 20px;\n    background-color: #0d1117;\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-b40f638e] {\n    margin-bottom: 15px;\n}\n.form-group label[data-v-b40f638e] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: bold;\n}\n.form-control[data-v-b40f638e] {\n    width: 100%;\n    padding: 10px;\n    border: 1px solid #ccc;\n    border-radius: 4px;\n}\n.btn[data-v-b40f638e] {\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n}\n.btn-primary[data-v-b40f638e] {\n    background-color: #6644ff;\n    color: white;\n    border: none;\n}\n.btn-primary[data-v-b40f638e]:hover {\n    background-color: #5238c6;\n}\n.wrapped-pre[data-v-b40f638e] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n";
 n(css,{});
 
 const _sfc_main = {
@@ -88,6 +88,11 @@ const _sfc_main = {
 			type: String,
 			default: 'home',
 		},
+	},
+	computed: {
+		isHomePage() {
+			return this.$props.page === 'home';
+		}
 	},
 	setup(props) {
 		useRouter();
@@ -156,21 +161,25 @@ const _sfc_main = {
 			rspJsonStr.value = "";
 			rawPageName = "";
 
-
-			api.get(`/items/api_parents?fields=*,api.*&filter[title][_eq]=${page}`).then((rsp) => {
-				if (rsp.data.data) {
-					rsp.data.data.forEach(item => {
-						rawPageName = item.title;
-						page_title.value = transformTitle(item.title);
-						page_body.value = item.description;
-						recursiveFind(rsp.data.data[0]);
-					});
-				} else {
-					page_title.value = "404: Not Found";
-				}
-			}).catch((error) => {
-				console.log(error);
-			});
+			if (page === 'home') {
+				page_title.value = 'Tools';
+				page_body.value = 'Please select a tool on the left to get started!';
+			} else {
+				api.get(`/items/api_parents?fields=*,api.*&filter[title][_eq]=${page}`).then((rsp) => {
+					if (rsp.data.data) {
+						rsp.data.data.forEach(item => {
+							rawPageName = item.title;
+							page_title.value = transformTitle(item.title);
+							page_body.value = item.description;
+							recursiveFind(rsp.data.data[0]);
+						});
+					} else {
+						page_title.value = "404: Not Found";
+					}
+				}).catch((error) => {
+					console.log(error);
+				});
+			}
 		}
 
 		function fetch_all_pages() {
@@ -181,7 +190,6 @@ const _sfc_main = {
 						label: transformTitle(item.title),
 						to: `/tools-module/${item.title}`,
 						color: item.color,
-						icon: 'upload',
 					});
 				});
 			}).catch((error) => {
@@ -215,7 +223,7 @@ const _sfc_main = {
 				"body": formData.value,
 			};
 			console.log(postReqData);
-			api.post('/tools/example-magazine-intro', postReqData).then((rsp) => {
+			api.post(buildApiUrl(), postReqData).then((rsp) => {
 				let jsonRsp = rsp.data;
 				rspJsonStr.value = jsonRsp;
 				console.log(rsp.data);
@@ -223,6 +231,23 @@ const _sfc_main = {
 			}).catch((error) => {
 				console.log(error);
 			});
+		}
+
+		function buildApiUrl() {
+			let url = '/tools/' + rawPageName;
+			/*
+			// only used for GET requests
+			if (Object.keys(formData.value).length > 0) {
+				url += '?';
+				Object.keys(formData.value).forEach((key, index) => {
+					url += `${key}=${formData.value[key]}`;
+					if (index < Object.keys(formData.value).length - 1) {
+						url += '&';
+					}
+				});
+			}*/
+			// .replace only used when making GET request from here
+			return url.replace("$url.", "");
 		}
 	},
 };
@@ -271,21 +296,24 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
           ])
         ]))
       }), 128 /* KEYED_FRAGMENT */)),
-      createElementVNode("button", {
-        onClick: _cache[0] || (_cache[0] = (...args) => ($setup.submitForm && $setup.submitForm(...args))),
-        class: "btn btn-primary"
-      }, "Submit"),
+      (!$options.isHomePage)
+        ? (openBlock(), createElementBlock("button", {
+            key: 1,
+            onClick: _cache[0] || (_cache[0] = (...args) => ($setup.submitForm && $setup.submitForm(...args))),
+            class: "btn btn-primary"
+          }, "Submit"))
+        : createCommentVNode("v-if", true),
       createElementVNode("pre", _hoisted_4, toDisplayString($setup.rspJsonStr), 1 /* TEXT */)
     ]),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["title"]))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-0d4fb9c3"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-b40f638e"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',
 	name: 'Tools',
-	icon: 'box',
+	icon: 'build',
 	routes: [
 		{
 			path: '',
