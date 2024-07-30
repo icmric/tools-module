@@ -76,7 +76,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-a3bafbbf] {\n    padding: 20px;\n    background-color: #0d1117;\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-a3bafbbf] {\n    margin-bottom: 15px;\n}\n.form-group label[data-v-a3bafbbf] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: bold;\n}\n.form-control[data-v-a3bafbbf] {\n    width: 100%;\n    padding: 10px;\n    border: 1px solid #ccc;\n    border-radius: 4px;\n}\n.btn[data-v-a3bafbbf] {\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n}\n.btn-primary[data-v-a3bafbbf] {\n    background-color: #6644ff;\n    color: white;\n    border: none;\n}\n.btn-primary[data-v-a3bafbbf]:hover {\n    background-color: #5238c6;\n}\n.wrapped-pre[data-v-a3bafbbf] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n";
+var css = "\n.page-body[data-v-2b362703] {\n    padding: 20px;\n    background-color: #0d1117;\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-2b362703] {\n    margin-bottom: 15px;\n}\n.form-group label[data-v-2b362703] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: bold;\n}\n.form-control[data-v-2b362703] {\n    width: 100%;\n    padding: 10px;\n    border: 1px solid #ccc;\n    border-radius: 4px;\n}\n.btn[data-v-2b362703] {\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n}\n.btn-primary[data-v-2b362703] {\n    background-color: #6644ff;\n    color: white;\n    border: none;\n}\n.btn-primary[data-v-2b362703]:hover {\n    background-color: #5238c6;\n}\n.wrapped-pre[data-v-2b362703] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n";
 n(css,{});
 
 const _sfc_main = {
@@ -213,11 +213,10 @@ const _sfc_main = {
 			let testReturn = {};
 			testReturn = formData.value;
 			let tempKeys = Object.keys(testReturn);
-			let keyToUse = tempKeys[0];
-			console.log("title: " + page_title.value);
-			console.log("value: " + testReturn[keyToUse] + " key: " + keyToUse);
-			console.log(buildApiUrl());
-			
+			tempKeys[0];
+			//console.log(formData.value);
+			//console.log(buildApiUrl());
+			/*
 			api.get(buildApiUrl()).then((rsp) => {
 				let jsonRsp = rsp.data;
 				rspJsonStr.value = jsonRsp;
@@ -226,21 +225,20 @@ const _sfc_main = {
 			}).catch((error) => {
 				console.log(error);
 			});
-		}
-
-		function buildApiUrl() {
-			let url = '/tools/' + rawPageName;
-			if (Object.keys(formData.value).length > 0) {
-				url += '?';
-				Object.keys(formData.value).forEach((key, index) => {
-					url += `${key}=${formData.value[key]}`;
-					if (index < Object.keys(formData.value).length - 1) {
-						url += '&';
-					}
-				});
-			}
-			// Remove this when transitioning to POST request??
-			return url.replace("$url.", "");
+			*/
+			let postReqData = {
+				"tool": rawPageName,
+				"body": formData.value,
+			};
+			console.log(postReqData);
+			api.post('/tools/example-magazine-intro', postReqData).then((rsp) => {
+				let jsonRsp = rsp.data;
+				rspJsonStr.value = jsonRsp;
+				console.log(rsp.data);
+				console.log(rspJsonStr.value);
+			}).catch((error) => {
+				console.log(error);
+			});
 		}
 	},
 };
@@ -298,7 +296,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["title"]))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-a3bafbbf"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-2b362703"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',

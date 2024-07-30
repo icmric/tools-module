@@ -160,11 +160,24 @@ export default {
 			testReturn = formData.value;
 			let tempKeys = Object.keys(testReturn);
 			let keyToUse = tempKeys[0];
-			console.log("title: " + page_title.value);
-			console.log("value: " + testReturn[keyToUse] + " key: " + keyToUse);
-			console.log(buildApiUrl());
-			
+			//console.log(formData.value);
+			//console.log(buildApiUrl());
+			/*
 			api.get(buildApiUrl()).then((rsp) => {
+				let jsonRsp = rsp.data;
+				rspJsonStr.value = jsonRsp;
+				console.log(rsp.data);
+				console.log(rspJsonStr.value);
+			}).catch((error) => {
+				console.log(error);
+			});
+			*/
+			let postReqData = {
+				"tool": rawPageName,
+				"body": formData.value,
+			};
+			console.log(postReqData);
+			api.post('/tools/example-magazine-intro', postReqData).then((rsp) => {
 				let jsonRsp = rsp.data;
 				rspJsonStr.value = jsonRsp;
 				console.log(rsp.data);
