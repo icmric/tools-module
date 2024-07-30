@@ -22,7 +22,6 @@
 <script>
 import { ref, watch } from 'vue';
 import { useApi } from '@directus/extensions-sdk';
-import { useRouter } from 'vue-router';
 import PageNavigation from './components/navigation.vue';
 
 export default {
@@ -41,7 +40,6 @@ export default {
 		}
 	},
 	setup(props) {
-		const router = useRouter();
 		const api = useApi();
 		const page_title = ref('');
 		const page_body = ref('');
@@ -64,7 +62,6 @@ export default {
 			() => props.page,
 			async () => {
 				render_page(props.page);
-				console.log(testSet);
 			}
 		);
 
@@ -175,12 +172,9 @@ export default {
 				"tool": rawPageName,
 				"body": formData.value,
 			};
-			console.log(postReqData);
 			api.post(buildApiUrl(), postReqData).then((rsp) => {
 				let jsonRsp = rsp.data;
 				rspJsonStr.value = jsonRsp;
-				console.log(rsp.data);
-				console.log(rspJsonStr.value);
 			}).catch((error) => {
 				console.log(error);
 			});
