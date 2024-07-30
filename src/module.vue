@@ -156,22 +156,6 @@ export default {
 
 		function submitForm() {
 			rspJsonStr.value = "...";
-			let testReturn = {};
-			testReturn = formData.value;
-			let tempKeys = Object.keys(testReturn);
-			let keyToUse = tempKeys[0];
-			//console.log(formData.value);
-			//console.log(buildApiUrl());
-			/*
-			api.get(buildApiUrl()).then((rsp) => {
-				let jsonRsp = rsp.data;
-				rspJsonStr.value = jsonRsp;
-				console.log(rsp.data);
-				console.log(rspJsonStr.value);
-			}).catch((error) => {
-				console.log(error);
-			});
-			*/
 			let postReqData = {
 				"tool": rawPageName,
 				"body": formData.value,
