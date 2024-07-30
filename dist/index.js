@@ -1,4 +1,4 @@
-import { resolveComponent, openBlock, createBlock, withCtx, createElementBlock, Fragment, renderList, createVNode, createCommentVNode, ref, watch, createElementVNode, toDisplayString, withDirectives, vModelText } from 'vue';
+import { resolveComponent, openBlock, createBlock, withCtx, createElementBlock, Fragment, renderList, createVNode, createTextVNode, toDisplayString, createCommentVNode, ref, watch, createElementVNode, withDirectives, vModelText } from 'vue';
 import { useApi } from '@directus/extensions-sdk';
 import { useRouter } from 'vue-router';
 
@@ -11,26 +11,59 @@ var _export_sfc = (sfc, props) => {
 };
 
 const _sfc_main$1 = {
-	name: 'PageNavigation',
-	inheritAttrs: false,
-	props: {
-		current: {
-			type: String,
-			default: null,
-		},
-		pages: {
-			type: Array,
-			default: [],
-		}
-	},
+  name: 'PageNavigation',
+  inheritAttrs: false,
+  props: {
+    current: {
+      type: String,
+      default: null,
+    },
+    pages: {
+      type: Array,
+      default: [],
+    },
+  },
+  data() {
+    return {
+      groupedPages: [],
+    };
+  },
+  watch: {
+    pages(newVal) {
+      this.groupPages(newVal);
+    },
+  },
+  methods: {
+    groupPages(pages) {
+      this.groupedPages = pages.reduce((groups, page) => {
+        const group = groups.find((g) => g.name === page.group);
+        if (group) {
+          group.items.push(page);
+        } else {
+          groups.push({ name: page.group, items: [page], isOpen: true });
+        }
+        return groups;
+      }, []);
+    },
+    toggleGroup(groupName) {
+      this.groupedPages.find((group) => group.name === groupName).isOpen = !this.groupedPages.find(
+        (group) => group.name === groupName
+      ).isOpen;
+    },
+  },
+  created() {
+    this.groupPages(this.pages);
+  },
 };
 
 function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+  const _component_v_list_item_title = resolveComponent("v-list-item-title");
   const _component_v_icon = resolveComponent("v-icon");
-  const _component_v_list_item_icon = resolveComponent("v-list-item-icon");
+  const _component_v_btn = resolveComponent("v-btn");
+  const _component_v_list_item = resolveComponent("v-list-item");
   const _component_v_text_overflow = resolveComponent("v-text-overflow");
   const _component_v_list_item_content = resolveComponent("v-list-item-content");
-  const _component_v_list_item = resolveComponent("v-list-item");
+  const _component_v_list_group = resolveComponent("v-list-group");
   const _component_v_list = resolveComponent("v-list");
 
   return ($props.pages)
@@ -39,34 +72,68 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
         nav: ""
       }, {
         default: withCtx(() => [
-          (openBlock(true), createElementBlock(Fragment, null, renderList($props.pages, (navItem) => {
-            return (openBlock(), createBlock(_component_v_list_item, {
-              key: navItem.to,
-              active: navItem.uri == $props.current,
-              to: navItem.to
+          (openBlock(true), createElementBlock(Fragment, null, renderList($data.groupedPages, (group) => {
+            return (openBlock(), createBlock(_component_v_list_group, {
+              title: group.name
             }, {
-              default: withCtx(() => [
-                createVNode(_component_v_list_item_icon, null, {
+              activator: withCtx(() => [
+                createVNode(_component_v_list_item, { header: "" }, {
                   default: withCtx(() => [
-                    createVNode(_component_v_icon, {
-                      name: navItem.icon,
-                      color: navItem.color
-                    }, null, 8 /* PROPS */, ["name", "color"])
-                  ]),
-                  _: 2 /* DYNAMIC */
-                }, 1024 /* DYNAMIC_SLOTS */),
-                createVNode(_component_v_list_item_content, null, {
-                  default: withCtx(() => [
-                    createVNode(_component_v_text_overflow, {
-                      text: navItem.label
-                    }, null, 8 /* PROPS */, ["text"])
+                    createVNode(_component_v_list_item_title, null, {
+                      default: withCtx(() => [
+                        createTextVNode(toDisplayString(group.name), 1 /* TEXT */)
+                      ]),
+                      _: 2 /* DYNAMIC */
+                    }, 1024 /* DYNAMIC_SLOTS */),
+                    createVNode(_component_v_btn, {
+                      icon: "",
+                      onClick: $event => ($options.toggleGroup(group.name))
+                    }, {
+                      default: withCtx(() => [
+                        (group.isOpen)
+                          ? (openBlock(), createBlock(_component_v_icon, { key: 0 }, {
+                              default: withCtx(() => [
+                                createTextVNode("keyboard_arrow_up")
+                              ]),
+                              _: 1 /* STABLE */
+                            }))
+                          : (openBlock(), createBlock(_component_v_icon, { key: 1 }, {
+                              default: withCtx(() => [
+                                createTextVNode("keyboard_arrow_down")
+                              ]),
+                              _: 1 /* STABLE */
+                            }))
+                      ]),
+                      _: 2 /* DYNAMIC */
+                    }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["onClick"])
                   ]),
                   _: 2 /* DYNAMIC */
                 }, 1024 /* DYNAMIC_SLOTS */)
               ]),
+              default: withCtx(() => [
+                (openBlock(true), createElementBlock(Fragment, null, renderList(group.items, (navItem) => {
+                  return (openBlock(), createBlock(_component_v_list_item, {
+                    key: navItem.to,
+                    active: navItem.uri === $props.current,
+                    to: navItem.to
+                  }, {
+                    default: withCtx(() => [
+                      createVNode(_component_v_list_item_content, null, {
+                        default: withCtx(() => [
+                          createVNode(_component_v_text_overflow, {
+                            text: navItem.label
+                          }, null, 8 /* PROPS */, ["text"])
+                        ]),
+                        _: 2 /* DYNAMIC */
+                      }, 1024 /* DYNAMIC_SLOTS */)
+                    ]),
+                    _: 2 /* DYNAMIC */
+                  }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["active", "to"]))
+                }), 128 /* KEYED_FRAGMENT */))
+              ]),
               _: 2 /* DYNAMIC */
-            }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["active", "to"]))
-          }), 128 /* KEYED_FRAGMENT */))
+            }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["title"]))
+          }), 256 /* UNKEYED_FRAGMENT */))
         ]),
         _: 1 /* STABLE */
       }))
@@ -76,7 +143,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-b40f638e] {\n    padding: 20px;\n    background-color: #0d1117;\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-b40f638e] {\n    margin-bottom: 15px;\n}\n.form-group label[data-v-b40f638e] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: bold;\n}\n.form-control[data-v-b40f638e] {\n    width: 100%;\n    padding: 10px;\n    border: 1px solid #ccc;\n    border-radius: 4px;\n}\n.btn[data-v-b40f638e] {\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n}\n.btn-primary[data-v-b40f638e] {\n    background-color: #6644ff;\n    color: white;\n    border: none;\n}\n.btn-primary[data-v-b40f638e]:hover {\n    background-color: #5238c6;\n}\n.wrapped-pre[data-v-b40f638e] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n";
+var css = "\n.page-body[data-v-7848b6ec] {\n    padding: 20px;\n    background-color: #0d1117;\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-7848b6ec] {\n    margin-bottom: 15px;\n}\n.form-group label[data-v-7848b6ec] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: bold;\n}\n.form-control[data-v-7848b6ec] {\n    width: 100%;\n    padding: 10px;\n    border: 1px solid #ccc;\n    border-radius: 4px;\n}\n.btn[data-v-7848b6ec] {\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n}\n.btn-primary[data-v-7848b6ec] {\n    background-color: #6644ff;\n    color: white;\n    border: none;\n}\n.btn-primary[data-v-7848b6ec]:hover {\n    background-color: #5238c6;\n}\n.wrapped-pre[data-v-7848b6ec] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n";
 n(css,{});
 
 const _sfc_main = {
@@ -183,13 +250,14 @@ const _sfc_main = {
 		}
 
 		function fetch_all_pages() {
-			api.get('/items/api_parents?fields=title,color').then((rsp) => {
+			api.get('/items/api_parents?fields=*,displayGroup.*').then((rsp) => {
 				all_pages.value = [];
+				console.log(rsp.data.data[0].displayGroup.group);
 				rsp.data.data.forEach(item => {
 					all_pages.value.push({
 						label: transformTitle(item.title),
 						to: `/tools-module/${item.title}`,
-						color: item.color,
+						group: item.displayGroup.group != null ? item.displayGroup.group : "All",
 					});
 				});
 			}).catch((error) => {
@@ -308,7 +376,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["title"]))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-b40f638e"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-7848b6ec"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',
