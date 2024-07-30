@@ -44,6 +44,7 @@ export default {
     groupPages(pages) {
       this.groupedPages = pages.reduce((groups, page) => {
         const group = groups.find((g) => g.name === page.group);
+		console.log(page.group);
         if (group) {
           group.items.push(page);
         } else {

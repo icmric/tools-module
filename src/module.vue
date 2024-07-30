@@ -131,12 +131,18 @@ export default {
 		function fetch_all_pages() {
 			api.get('/items/api_parents?fields=*,displayGroup.*').then((rsp) => {
 				all_pages.value = [];
-				console.log(rsp.data.data[0].displayGroup.group);
 				rsp.data.data.forEach(item => {
+					let group;
+					try {
+						group = item.displayGroup.group;
+					} catch (error) {
+						group = 'Misc';
+					}
+
 					all_pages.value.push({
 						label: transformTitle(item.title),
 						to: `/tools-module/${item.title}`,
-						group: item.displayGroup.group != null ? item.displayGroup.group : "All",
+						group: group,
 					});
 				});
 			}).catch((error) => {
