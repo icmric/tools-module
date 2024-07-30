@@ -8,7 +8,7 @@
         <router-view name="tools-module" :page="page" />
         <div v-if="page_body" v-html="page_body" class="page-body"></div>
 
-        <div v-for="origin in testSet" :key="origin" class="form-group">
+        <div v-for="origin in optionsSet" :key="origin" class="form-group">
             <label :for="origin">{{ origin }}</label>
             <textarea v-model="formData[origin]" :placeholder="origin" :id="origin" class="form-control"></textarea>
         </div>
@@ -41,17 +41,11 @@ export default {
 	},
 	setup(props) {
 		const api = useApi();
+		const all_pages = ref([]);
 		const page_title = ref('');
 		const page_body = ref('');
 		const formData = ref({});
-		let testSet = new Set();
-		const breadcrumb = ref([
-			{
-				name: 'Home',
-				to: `/tools-module`,
-			},
-		]);
-		const all_pages = ref([]);
+		let optionsSet = new Set();
 		let rspJsonStr = ref("");
 		let rawPageName = "";
 		
@@ -65,21 +59,19 @@ export default {
 			}
 		);
 
-		return { page_title, page_body, breadcrumb, all_pages, formData, testSet, rspJsonStr, submitForm, };
+		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, submitForm, };
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
 			for (let i = 0; i < keys.length; i++) {
 				if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
-					//console.log("Recursing at " + obj[keys[i]]);
 					recursiveFind(obj[keys[i]]);	
 				} else {
 					let parseResult = parse_placeholders(obj[keys[i]]);
 					if (parseResult != null) {
 						for (let j = 0; j < parseResult.length; j++) {
 							if (recursiveFindIncludesCheck(parseResult[j]) == true) {
-								//console.log(keys[i] + " " + parseResult[j]);
-								testSet.add(parseResult[j]);
+								optionsSet.add(parseResult[j]);
 							}
 						}
 					}
@@ -100,7 +92,7 @@ export default {
 		async function render_page(page) {
 			// Reset form fields and form data
 			formData.value = {};
-			testSet.clear();
+			optionsSet.clear();
 			rspJsonStr.value = "";
 			rawPageName = "";
 
@@ -194,7 +186,7 @@ export default {
 				});
 			}*/
 			// .replace only used when making GET request from here
-			return url.replace("$url.", "");
+			return url.replace("$request.", "");
 		}
 	},
 };
@@ -210,6 +202,7 @@ export default {
 
 .form-group {
     margin-bottom: 15px;
+	padding: 10px;
 }
 
 .form-group label {
@@ -239,6 +232,7 @@ export default {
     background-color: #6644ff;
     color: white;
     border: none;
+	margin: 10px;
 }
 
 .btn-primary:hover {

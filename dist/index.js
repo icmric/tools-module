@@ -114,7 +114,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-68bed855] {\n    padding: 20px;\n    background-color: #0d1117;\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-68bed855] {\n    margin-bottom: 15px;\n}\n.form-group label[data-v-68bed855] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: bold;\n}\n.form-control[data-v-68bed855] {\n    width: 100%;\n    padding: 10px;\n    border: 1px solid #ccc;\n    border-radius: 4px;\n}\n.btn[data-v-68bed855] {\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n}\n.btn-primary[data-v-68bed855] {\n    background-color: #6644ff;\n    color: white;\n    border: none;\n}\n.btn-primary[data-v-68bed855]:hover {\n    background-color: #5238c6;\n}\n.wrapped-pre[data-v-68bed855] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n";
+var css = "\n.page-body[data-v-babca3f1] {\n    padding: 20px;\n    background-color: #0d1117;\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-babca3f1] {\n    margin-bottom: 15px;\n\tpadding: 10px;\n}\n.form-group label[data-v-babca3f1] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: bold;\n}\n.form-control[data-v-babca3f1] {\n    width: 100%;\n    padding: 10px;\n    border: 1px solid #ccc;\n    border-radius: 4px;\n}\n.btn[data-v-babca3f1] {\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n}\n.btn-primary[data-v-babca3f1] {\n    background-color: #6644ff;\n    color: white;\n    border: none;\n\tmargin: 10px;\n}\n.btn-primary[data-v-babca3f1]:hover {\n    background-color: #5238c6;\n}\n.wrapped-pre[data-v-babca3f1] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n";
 n(css,{});
 
 const _sfc_main = {
@@ -134,17 +134,11 @@ const _sfc_main = {
 	},
 	setup(props) {
 		const api = useApi();
+		const all_pages = ref([]);
 		const page_title = ref('');
 		const page_body = ref('');
 		const formData = ref({});
-		let testSet = new Set();
-		const breadcrumb = ref([
-			{
-				name: 'Home',
-				to: `/tools-module`,
-			},
-		]);
-		const all_pages = ref([]);
+		let optionsSet = new Set();
 		let rspJsonStr = ref("");
 		let rawPageName = "";
 		
@@ -158,21 +152,19 @@ const _sfc_main = {
 			}
 		);
 
-		return { page_title, page_body, breadcrumb, all_pages, formData, testSet, rspJsonStr, submitForm, };
+		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, submitForm, };
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
 			for (let i = 0; i < keys.length; i++) {
 				if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
-					//console.log("Recursing at " + obj[keys[i]]);
 					recursiveFind(obj[keys[i]]);	
 				} else {
 					let parseResult = parse_placeholders(obj[keys[i]]);
 					if (parseResult != null) {
 						for (let j = 0; j < parseResult.length; j++) {
 							if (recursiveFindIncludesCheck(parseResult[j]) == true) {
-								//console.log(keys[i] + " " + parseResult[j]);
-								testSet.add(parseResult[j]);
+								optionsSet.add(parseResult[j]);
 							}
 						}
 					}
@@ -193,7 +185,7 @@ const _sfc_main = {
 		async function render_page(page) {
 			// Reset form fields and form data
 			formData.value = {};
-			testSet.clear();
+			optionsSet.clear();
 			rspJsonStr.value = "";
 			rawPageName = "";
 
@@ -287,7 +279,7 @@ const _sfc_main = {
 				});
 			}*/
 			// .replace only used when making GET request from here
-			return url.replace("$url.", "");
+			return url.replace("$request.", "");
 		}
 	},
 };
@@ -320,7 +312,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
             class: "page-body"
           }, null, 8 /* PROPS */, _hoisted_1))
         : createCommentVNode("v-if", true),
-      (openBlock(true), createElementBlock(Fragment, null, renderList($setup.testSet, (origin) => {
+      (openBlock(true), createElementBlock(Fragment, null, renderList($setup.optionsSet, (origin) => {
         return (openBlock(), createElementBlock("div", {
           key: origin,
           class: "form-group"
@@ -348,7 +340,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["title"]))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-68bed855"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-babca3f1"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',

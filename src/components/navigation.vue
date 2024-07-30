@@ -6,7 +6,6 @@
 					<v-list-item-title>{{ group.name }}</v-list-item-title>
 				</v-list-item>
 			</template>
-			
 			<v-list-item v-for="navItem in group.items" :key="navItem.to" :active="navItem.uri === current" :to="navItem.to">
 				<v-list-item-content>
 					<v-text-overflow :text="navItem.label" />
