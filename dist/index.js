@@ -40,15 +40,10 @@ const _sfc_main$1 = {
         if (group) {
           group.items.push(page);
         } else {
-          groups.push({ name: page.group, items: [page], isOpen: true });
+          groups.push({ name: page.group, items: [page]});
         }
         return groups;
       }, []);
-    },
-    toggleGroup(groupName) {
-      this.groupedPages.find((group) => group.name === groupName).isOpen = !this.groupedPages.find(
-        (group) => group.name === groupName
-      ).isOpen;
     },
   },
   created() {
@@ -58,8 +53,6 @@ const _sfc_main$1 = {
 
 function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_v_list_item_title = resolveComponent("v-list-item-title");
-  const _component_v_icon = resolveComponent("v-icon");
-  const _component_v_btn = resolveComponent("v-btn");
   const _component_v_list_item = resolveComponent("v-list-item");
   const _component_v_text_overflow = resolveComponent("v-text-overflow");
   const _component_v_list_item_content = resolveComponent("v-list-item-content");
@@ -84,28 +77,7 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
                         createTextVNode(toDisplayString(group.name), 1 /* TEXT */)
                       ]),
                       _: 2 /* DYNAMIC */
-                    }, 1024 /* DYNAMIC_SLOTS */),
-                    createVNode(_component_v_btn, {
-                      icon: "",
-                      onClick: $event => ($options.toggleGroup(group.name))
-                    }, {
-                      default: withCtx(() => [
-                        (group.isOpen)
-                          ? (openBlock(), createBlock(_component_v_icon, { key: 0 }, {
-                              default: withCtx(() => [
-                                createTextVNode("keyboard_arrow_up")
-                              ]),
-                              _: 1 /* STABLE */
-                            }))
-                          : (openBlock(), createBlock(_component_v_icon, { key: 1 }, {
-                              default: withCtx(() => [
-                                createTextVNode("keyboard_arrow_down")
-                              ]),
-                              _: 1 /* STABLE */
-                            }))
-                      ]),
-                      _: 2 /* DYNAMIC */
-                    }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["onClick"])
+                    }, 1024 /* DYNAMIC_SLOTS */)
                   ]),
                   _: 2 /* DYNAMIC */
                 }, 1024 /* DYNAMIC_SLOTS */)
