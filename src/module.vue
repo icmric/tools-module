@@ -101,7 +101,7 @@ export default {
 				page_title.value = 'Tools';
 				page_body.value = 'Please select a tool on the left to get started!';
 			} else {
-				api.get(`/items/api_parents?fields=*,api.*&filter[title][_eq]=${page}`).then((rsp) => {
+				api.get(`/items/resources?fields=*,retrieves.*&filter[title][_eq]=${page}`).then((rsp) => {
 					if (rsp.data.data) {
 						rsp.data.data.forEach(item => {
 							rawPageName = item.title;
@@ -119,14 +119,13 @@ export default {
 		}
 
 		function fetch_all_pages() {
-			api.get('/items/api_parents?fields=*,displayGroup.*').then((rsp) => {
+			api.get('/items/resources?fields=*,displayGroup.*').then((rsp) => {
 				all_pages.value = [];
 				rsp.data.data.forEach(item => {
-					let group;
-					try {
-						group = item.displayGroup.group;
-					} catch (error) {
-						group = 'Misc';
+					console.log(item.displayGroup);
+					let group = item.displayGroup;
+					if (group == null) {
+						group = "Misc";
 					}
 
 					all_pages.value.push({

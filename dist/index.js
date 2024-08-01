@@ -114,7 +114,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-844b5f64] {\n    padding: 20px;\n    background-color: #0d1117;\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-844b5f64] {\n    margin-bottom: 15px;\n\tpadding: 10px;\n}\n.form-group label[data-v-844b5f64] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: bold;\n}\n.form-control[data-v-844b5f64] {\n    width: 100%;\n    padding: 10px;\n    border: 1px solid #ccc;\n    border-radius: 4px;\n}\n.btn[data-v-844b5f64] {\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n}\n.btn-primary[data-v-844b5f64] {\n    background-color: #6644ff;\n    color: white;\n    border: none;\n\tmargin: 10px;\n}\n.btn-primary[data-v-844b5f64]:hover {\n    background-color: #5238c6;\n}\n.wrapped-pre[data-v-844b5f64] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n";
+var css = "\n.page-body[data-v-b663476a] {\n    padding: 20px;\n    background-color: #0d1117;\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-b663476a] {\n    margin-bottom: 15px;\n\tpadding: 10px;\n}\n.form-group label[data-v-b663476a] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: bold;\n}\n.form-control[data-v-b663476a] {\n    width: 100%;\n    padding: 10px;\n    border: 1px solid #ccc;\n    border-radius: 4px;\n}\n.btn[data-v-b663476a] {\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n}\n.btn-primary[data-v-b663476a] {\n    background-color: #6644ff;\n    color: white;\n    border: none;\n\tmargin: 10px;\n}\n.btn-primary[data-v-b663476a]:hover {\n    background-color: #5238c6;\n}\n.wrapped-pre[data-v-b663476a] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n";
 n(css,{});
 
 const _sfc_main = {
@@ -192,7 +192,7 @@ const _sfc_main = {
 				page_title.value = 'Tools';
 				page_body.value = 'Please select a tool on the left to get started!';
 			} else {
-				api.get(`/items/api_parents?fields=*,api.*&filter[title][_eq]=${page}`).then((rsp) => {
+				api.get(`/items/resources?fields=*,retrieves.*&filter[title][_eq]=${page}`).then((rsp) => {
 					if (rsp.data.data) {
 						rsp.data.data.forEach(item => {
 							rawPageName = item.title;
@@ -210,14 +210,13 @@ const _sfc_main = {
 		}
 
 		function fetch_all_pages() {
-			api.get('/items/api_parents?fields=*,displayGroup.*').then((rsp) => {
+			api.get('/items/resources?fields=*,displayGroup.*').then((rsp) => {
 				all_pages.value = [];
 				rsp.data.data.forEach(item => {
-					let group;
-					try {
-						group = item.displayGroup.group;
-					} catch (error) {
-						group = 'Misc';
+					console.log(item.displayGroup);
+					let group = item.displayGroup;
+					if (group == null) {
+						group = "Misc";
 					}
 
 					all_pages.value.push({
@@ -362,7 +361,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["title"]))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-844b5f64"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-b663476a"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',
