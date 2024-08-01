@@ -15,6 +15,8 @@
         
         <button v-if="!isHomePage" @click="submitForm" class="btn btn-primary">Submit</button>
 
+		<button v-if="!isHomePage" @click="showAllDetails" class="btn btn-primary">Show All Details</button>
+
         <pre class="wrapped-pre">{{ rspJsonStr }}</pre>
     </private-view>
 </template>
@@ -59,7 +61,7 @@ export default {
 			}
 		);
 
-		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, submitForm, };
+		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, submitForm, showAllDetails, };
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
@@ -160,19 +162,32 @@ export default {
 			}
 		}
 
-		function submitForm() {
-			rspJsonStr.value = "...";
+		async function makeApiRequest() {
 			let postReqData = {
 				"tool": rawPageName,
 				"body": formData.value,
 			};
 			
-			api.post(buildApiUrl(), postReqData).then((rsp) => {
+			await api.post(buildApiUrl(), postReqData).then((rsp) => {
 				let jsonRsp = rsp.data;
 				rspJsonStr.value = jsonRsp;
 			}).catch((error) => {
 				console.log(error);
 			});
+		}
+
+		function submitForm() {
+			rspJsonStr.value = "...";
+			makeApiRequest();
+		}
+
+
+		async function showAllDetails() {
+			rspJsonStr.value = "...";
+			await makeApiRequest();
+			rspJsonStr.value = JSON.stringify(rspJsonStr.value, null, 2);
+			rspJsonStr.value += "\nForm Data: " + JSON.stringify(formData.value, null, 2);
+			rspJsonStr.value += "\nAPI URL: " + buildApiUrl();
 		}
 
 		function buildApiUrl() {
