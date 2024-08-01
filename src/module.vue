@@ -45,7 +45,6 @@ export default {
 		const page_title = ref('');
 		const page_body = ref('');
 		const formData = ref({});
-		let defaultValues = {};
 		let optionsSet = new Set();
 		let rspJsonStr = ref("");
 		let rawPageName = "";
@@ -64,25 +63,22 @@ export default {
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
-			let result = {};
 			for (let i = 0; i < keys.length; i++) {
 				if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
 					recursiveFind(obj[keys[i]]);	
 				} else {
 					let parseResult = parse_placeholders(obj[keys[i]]);
 					if (parseResult != null) {
-						//for (let j = 0; j < parseResult.length; j++) {
-						if (recursiveFindIncludesCheck(parseResult[0]) == true) {
+						if (allowUserInput(parseResult[0])) {
 							optionsSet.add(parseResult[0]);
 							formData.value[parseResult[0]] == null ? formData.value[parseResult[0]] = parseResult[1] : null;
 						}
-						//}
 					}
 				}
 			}
 		}
 
-		function recursiveFindIncludesCheck(objToCheck) {
+		function allowUserInput(objToCheck) {
 			let valuesToCheck = ["reqAccountability", "$tool", "apiResponse"];
 			for (let i = 0; i < valuesToCheck.length; i++) {
 				if (objToCheck.includes(valuesToCheck[i])) {
