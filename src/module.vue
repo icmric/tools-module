@@ -10,7 +10,7 @@
 
         <div v-for="origin in optionsSet" :key="origin" class="form-group">
             <label :for="origin">{{ origin }}</label>
-            <textarea v-model="formData[origin]" :placeholder="origin" :id="origin" class="form-control"></textarea>
+            <textarea v-model="formData[origin]" :id="origin" class="form-control"></textarea>
         </div>
         
         <button v-if="!isHomePage" @click="submitForm" class="btn btn-primary">Submit</button>
@@ -45,6 +45,7 @@ export default {
 		const page_title = ref('');
 		const page_body = ref('');
 		const formData = ref({});
+		let defaultValues = {};
 		let optionsSet = new Set();
 		let rspJsonStr = ref("");
 		let rawPageName = "";
@@ -63,17 +64,19 @@ export default {
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
+			let result = {};
 			for (let i = 0; i < keys.length; i++) {
 				if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
 					recursiveFind(obj[keys[i]]);	
 				} else {
 					let parseResult = parse_placeholders(obj[keys[i]]);
 					if (parseResult != null) {
-						for (let j = 0; j < parseResult.length; j++) {
-							if (recursiveFindIncludesCheck(parseResult[j]) == true) {
-								optionsSet.add(parseResult[j]);
-							}
+						//for (let j = 0; j < parseResult.length; j++) {
+						if (recursiveFindIncludesCheck(parseResult[0]) == true) {
+							optionsSet.add(parseResult[0]);
+							formData.value[parseResult[0]] == null ? formData.value[parseResult[0]] = parseResult[1] : null;
 						}
+						//}
 					}
 				}
 			}
@@ -91,7 +94,7 @@ export default {
 
 		async function render_page(page) {
 			// Reset form fields and form data
-			formData.value = {};
+			//formData.value = {};
 			optionsSet.clear();
 			rspJsonStr.value = "";
 			rawPageName = "";
@@ -149,7 +152,10 @@ export default {
 			let match;
 			const placeholders = [];
 			while ((match = regex.exec(text)) !== null) {
-				placeholders.push(match[1]);
+				let parts = match[1].split(' ');
+				let path = parts[0];
+				placeholders.push(path);
+				placeholders.push(parts.slice(1).join(' '));
 			}
 			if (placeholders.length <= 0) {
 				return null;
@@ -164,6 +170,7 @@ export default {
 				"tool": rawPageName,
 				"body": formData.value,
 			};
+			
 			api.post(buildApiUrl(), postReqData).then((rsp) => {
 				let jsonRsp = rsp.data;
 				rspJsonStr.value = jsonRsp;
