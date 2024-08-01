@@ -17,6 +17,8 @@
 
 		<button v-if="!isHomePage" @click="showAllDetails" class="btn btn-primary">Show All Details</button>
 
+		<button v-if="!isHomePage" @click="showInNewTab" class="btn btn-new-tab">Show In New Tab</button>
+
         <pre class="wrapped-pre">{{ rspJsonStr }}</pre>
     </private-view>
 </template>
@@ -61,7 +63,7 @@ export default {
 			}
 		);
 
-		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, submitForm, showAllDetails, };
+		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, submitForm, showAllDetails, showInNewTab, };
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
@@ -180,7 +182,6 @@ export default {
 			makeApiRequest();
 		}
 
-
 		async function showAllDetails() {
 			rspJsonStr.value = "...";
 			await makeApiRequest();
@@ -189,19 +190,26 @@ export default {
 			rspJsonStr.value += "\nAPI URL: " + buildApiUrl();
 		}
 
-		function buildApiUrl() {
+		async function showInNewTab() {
+			window.open(buildApiUrl(true));
+		}
+
+		function buildApiUrl(getRequest = false) {
 			let url = '/tools/' + rawPageName;
-			/*
-			// only used for GET requests
-			if (Object.keys(formData.value).length > 0) {
-				url += '?';
-				Object.keys(formData.value).forEach((key, index) => {
-					url += `${key}=${formData.value[key]}`;
-					if (index < Object.keys(formData.value).length - 1) {
-						url += '&';
-					}
-				});
-			}*/
+
+			if (getRequest) {
+				// only used for GET requests
+				if (Object.keys(formData.value).length > 0) {
+					url += '?';
+					Object.keys(formData.value).forEach((key, index) => {
+						url += `${key}=${formData.value[key]}`;
+						if (index < Object.keys(formData.value).length - 1) {
+							url += '&';
+						}
+					});
+				}
+			}	
+
 			// .replace only used when making GET request from here
 			return url.replace("$request.", "");
 		}
@@ -243,16 +251,13 @@ export default {
     text-align: center;
     cursor: pointer;
     border-radius: 4px;
-}
-
-.btn-primary {
-    background-color: #6644ff;
-    color: white;
+	background-color: #6644ff;
+	color: white;
     border: none;
 	margin: 10px;
 }
 
-.btn-primary:hover {
+.btn:hover {
     background-color: #5238c6;
 }
 
