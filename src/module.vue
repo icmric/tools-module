@@ -94,7 +94,7 @@ export default {
 
 		async function render_page(page) {
 			// Reset form fields and form data
-			//formData.value = {};
+			formData.value = {};
 			optionsSet.clear();
 			rspJsonStr.value = "";
 			rawPageName = "";
