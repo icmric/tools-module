@@ -30,7 +30,6 @@
 </template>
 
 <script>
-//<pre v-if="showJsonRsp" class="wrapped-pre">{{ rspJsonStr }}</pre>
 import { ref, watch } from 'vue';
 import { useApi } from '@directus/extensions-sdk';
 import PageNavigation from './components/navigation.vue';
@@ -76,7 +75,7 @@ export default {
 			}
 		);
 
-		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, displayBorder, submitForm, debugButton, showInNewTab, };
+		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, displayBorder, submitForm, debugButton, showInNewTab, copyToClipboard, };
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
@@ -138,7 +137,6 @@ export default {
 			api.get('/items/resources?fields=*,displayGroup.*').then((rsp) => {
 				all_pages.value = [];
 				rsp.data.data.forEach(item => {
-					console.log(item.displayGroup);
 					let group = item.displayGroup;
 					if (group == null) {
 						group = "Misc";
@@ -205,6 +203,11 @@ export default {
 			rspJsonStr.value += "\nForm Data: " + JSON.stringify(formData.value, null, 2);
 			rspJsonStr.value += "\nAPI URL: " + buildApiUrl();
 			rspJsonStr.value += "\nRaw Request: " + rawRequest;
+		}
+
+		function copyToClipboard() {
+			// pretty print copied text? if no, remove ,null, 2
+			navigator.clipboard.writeText(JSON.stringify(rspJsonStr.value, null, 2));
 		}
 
 		async function showInNewTab() {
