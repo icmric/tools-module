@@ -114,7 +114,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-78843197] {\n    padding: 20px;\n    background-color: #0d1117;\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-78843197] {\n    margin-bottom: 15px;\n\tpadding: 10px;\n}\n.form-group label[data-v-78843197] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: bold;\n}\n.form-control[data-v-78843197] {\n    width: 100%;\n    padding: 10px;\n    border: 1px solid #ccc;\n    border-radius: 4px;\n}\n.btn[data-v-78843197] {\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n\tbackground-color: #6644ff;\n\tcolor: white;\n    border: none;\n\tmargin: 10px;\n}\n.btn[data-v-78843197]:hover {\n    background-color: #5238c6;\n}\n.wrapped-pre[data-v-78843197] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n";
+var css = "\n.page-body[data-v-c7baa86a] {\n    padding: 20px;\n    background-color: #0d1117;\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-c7baa86a] {\n    margin-bottom: 15px;\n\tpadding: 10px;\n}\n.form-group label[data-v-c7baa86a] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: bold;\n}\n.form-control[data-v-c7baa86a] {\n    width: 90%;\n    padding: 10px;\n    border: 1px solid #ccc;\n    border-radius: 4px;\n}\n.btn[data-v-c7baa86a] {\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n\tbackground-color: #6644ff;\n\tcolor: white;\n    border: none;\n\tmargin: 10px;\n}\n.btn[data-v-c7baa86a]:hover {\n    background-color: #5238c6;\n}\n.btn-debug[data-v-c7baa86a] {\n\tfloat: right;\n}\n.wrapped-pre[data-v-c7baa86a] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 90%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n.pre-container[data-v-c7baa86a] {\n\tmargin-left: 10px;\n\tborder: 2px solid #21262e;\n    position: relative;\n}\n.btn-copy[data-v-c7baa86a] {\n    position: absolute;\n    top: 10px;\n    right: 10px;\n    background-color: #21262e;\n    color: white;\n    border: none;\n    padding: 5px 10px;\n    border-radius: 4px;\n    cursor: pointer;\n}\n.btn-copy[data-v-c7baa86a]:hover {\n    background-color: #30363d;\n}\n";
 n(css,{});
 
 const _sfc_main = {
@@ -130,6 +130,9 @@ const _sfc_main = {
 	computed: {
 		isHomePage() {
 			return this.$props.page === 'home';
+		},
+		showJsonRsp() {
+			return this.rspJsonStr !== "";
 		}
 	},
 	setup(props) {
@@ -138,9 +141,12 @@ const _sfc_main = {
 		const page_title = ref('');
 		const page_body = ref('');
 		const formData = ref({});
+		let rawRequest = "";
 		let optionsSet = new Set();
 		let rspJsonStr = ref("");
 		let rawPageName = "";
+		let bypassTransform = false;
+		let displayBorder = false;
 		
 		render_page(props.page);
 		fetch_all_pages();
@@ -152,7 +158,7 @@ const _sfc_main = {
 			}
 		);
 
-		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, submitForm, showAllDetails, showInNewTab, };
+		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, displayBorder, submitForm, debugButton, showInNewTab, };
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
@@ -198,6 +204,7 @@ const _sfc_main = {
 							rawPageName = item.title;
 							page_title.value = transformTitle(item.title);
 							page_body.value = item.description;
+							rawRequest = item.main;
 							recursiveFind(rsp.data.data[0]);
 						});
 					} else {
@@ -256,6 +263,7 @@ const _sfc_main = {
 			let postReqData = {
 				"tool": rawPageName,
 				"body": formData.value,
+				"bypassTransform": bypassTransform,
 			};
 			
 			await api.post(buildApiUrl(), postReqData).then((rsp) => {
@@ -271,12 +279,14 @@ const _sfc_main = {
 			makeApiRequest();
 		}
 
-		async function showAllDetails() {
+		async function debugButton() {
 			rspJsonStr.value = "...";
+			bypassTransform = true;
 			await makeApiRequest();
 			rspJsonStr.value = JSON.stringify(rspJsonStr.value, null, 2);
 			rspJsonStr.value += "\nForm Data: " + JSON.stringify(formData.value, null, 2);
 			rspJsonStr.value += "\nAPI URL: " + buildApiUrl();
+			rspJsonStr.value += "\nRaw Request: " + rawRequest;
 		}
 
 		async function showInNewTab() {
@@ -307,11 +317,16 @@ const _sfc_main = {
 const _hoisted_1 = ["innerHTML"];
 const _hoisted_2 = ["for"];
 const _hoisted_3 = ["onUpdate:modelValue", "id"];
-const _hoisted_4 = { class: "wrapped-pre" };
+const _hoisted_4 = {
+  key: 4,
+  class: "pre-container"
+};
+const _hoisted_5 = { class: "wrapped-pre" };
 
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_page_navigation = resolveComponent("page-navigation");
   const _component_router_view = resolveComponent("router-view");
+  const _component_v_icon = resolveComponent("v-icon");
   const _component_private_view = resolveComponent("private-view");
 
   return (openBlock(), createBlock(_component_private_view, { title: $setup.page_title }, {
@@ -358,23 +373,33 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       (!$options.isHomePage)
         ? (openBlock(), createElementBlock("button", {
             key: 2,
-            onClick: _cache[1] || (_cache[1] = (...args) => ($setup.showAllDetails && $setup.showAllDetails(...args))),
-            class: "btn btn-primary"
-          }, "Show All Details"))
+            onClick: _cache[1] || (_cache[1] = (...args) => ($setup.showInNewTab && $setup.showInNewTab(...args))),
+            class: "btn btn-new-tab"
+          }, "Show In New Tab"))
         : createCommentVNode("v-if", true),
       (!$options.isHomePage)
         ? (openBlock(), createElementBlock("button", {
             key: 3,
-            onClick: _cache[2] || (_cache[2] = (...args) => ($setup.showInNewTab && $setup.showInNewTab(...args))),
-            class: "btn btn-new-tab"
-          }, "Show In New Tab"))
+            onClick: _cache[2] || (_cache[2] = (...args) => ($setup.debugButton && $setup.debugButton(...args))),
+            class: "btn btn-debug"
+          }, "Debug"))
         : createCommentVNode("v-if", true),
-      createElementVNode("pre", _hoisted_4, toDisplayString($setup.rspJsonStr), 1 /* TEXT */)
+      ($options.showJsonRsp)
+        ? (openBlock(), createElementBlock("div", _hoisted_4, [
+            createElementVNode("button", {
+              onClick: _cache[3] || (_cache[3] = (...args) => (_ctx.copyToClipboard && _ctx.copyToClipboard(...args))),
+              class: "btn btn-copy"
+            }, [
+              createVNode(_component_v_icon, { name: "content_copy" })
+            ]),
+            createElementVNode("pre", _hoisted_5, toDisplayString($setup.rspJsonStr), 1 /* TEXT */)
+          ]))
+        : createCommentVNode("v-if", true)
     ]),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["title"]))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-78843197"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-c7baa86a"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',

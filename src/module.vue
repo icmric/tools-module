@@ -1,6 +1,5 @@
 <template>
     <private-view :title="page_title">
-        
         <template #navigation>
             <page-navigation :current="page" :pages="all_pages" />
         </template>
@@ -15,15 +14,23 @@
         
         <button v-if="!isHomePage" @click="submitForm" class="btn btn-primary">Submit</button>
 
-		<button v-if="!isHomePage" @click="showAllDetails" class="btn btn-primary">Show All Details</button>
-
 		<button v-if="!isHomePage" @click="showInNewTab" class="btn btn-new-tab">Show In New Tab</button>
 
-        <pre class="wrapped-pre">{{ rspJsonStr }}</pre>
+		<button v-if="!isHomePage" @click="debugButton" class="btn btn-debug">Debug</button>
+
+		<div v-if="showJsonRsp" class="pre-container">
+            <button @click="copyToClipboard" class="btn btn-copy">
+				<v-icon name="content_copy" />				
+			</button>
+            <pre class="wrapped-pre">{{ rspJsonStr }}</pre>
+        </div>
+		
+        
     </private-view>
 </template>
 
 <script>
+//<pre v-if="showJsonRsp" class="wrapped-pre">{{ rspJsonStr }}</pre>
 import { ref, watch } from 'vue';
 import { useApi } from '@directus/extensions-sdk';
 import PageNavigation from './components/navigation.vue';
@@ -41,6 +48,9 @@ export default {
 	computed: {
 		isHomePage() {
 			return this.$props.page === 'home';
+		},
+		showJsonRsp() {
+			return this.rspJsonStr !== "";
 		}
 	},
 	setup(props) {
@@ -49,9 +59,12 @@ export default {
 		const page_title = ref('');
 		const page_body = ref('');
 		const formData = ref({});
+		let rawRequest = "";
 		let optionsSet = new Set();
 		let rspJsonStr = ref("");
 		let rawPageName = "";
+		let bypassTransform = false;
+		let displayBorder = false;
 		
 		render_page(props.page);
 		fetch_all_pages();
@@ -63,7 +76,7 @@ export default {
 			}
 		);
 
-		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, submitForm, showAllDetails, showInNewTab, };
+		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, displayBorder, submitForm, debugButton, showInNewTab, };
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
@@ -109,6 +122,7 @@ export default {
 							rawPageName = item.title;
 							page_title.value = transformTitle(item.title);
 							page_body.value = item.description;
+							rawRequest = item.main;
 							recursiveFind(rsp.data.data[0]);
 						});
 					} else {
@@ -167,6 +181,7 @@ export default {
 			let postReqData = {
 				"tool": rawPageName,
 				"body": formData.value,
+				"bypassTransform": bypassTransform,
 			};
 			
 			await api.post(buildApiUrl(), postReqData).then((rsp) => {
@@ -182,12 +197,14 @@ export default {
 			makeApiRequest();
 		}
 
-		async function showAllDetails() {
+		async function debugButton() {
 			rspJsonStr.value = "...";
+			bypassTransform = true;
 			await makeApiRequest();
 			rspJsonStr.value = JSON.stringify(rspJsonStr.value, null, 2);
 			rspJsonStr.value += "\nForm Data: " + JSON.stringify(formData.value, null, 2);
 			rspJsonStr.value += "\nAPI URL: " + buildApiUrl();
+			rspJsonStr.value += "\nRaw Request: " + rawRequest;
 		}
 
 		async function showInNewTab() {
@@ -237,7 +254,7 @@ export default {
 }
 
 .form-control {
-    width: 100%;
+    width: 90%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -261,14 +278,40 @@ export default {
     background-color: #5238c6;
 }
 
+.btn-debug {
+	float: right;
+}
+
 .wrapped-pre {
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    max-width: 100%;
+    max-width: 90%;
     background-color: #0d1117;
     padding: 10px;
     border-radius: 4px;
     margin-top: 20px;
+}
+
+.pre-container {
+	margin-left: 10px;
+	border: 2px solid #21262e;
+    position: relative;
+}
+
+.btn-copy {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #21262e;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-copy:hover {
+    background-color: #30363d;
 }
 </style>
