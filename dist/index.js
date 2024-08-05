@@ -1,4 +1,4 @@
-import { resolveComponent, openBlock, createBlock, withCtx, createElementBlock, Fragment, renderList, createVNode, createTextVNode, toDisplayString, createCommentVNode, ref, watch, createElementVNode, withDirectives, vModelText } from 'vue';
+import { resolveComponent, openBlock, createBlock, withCtx, createElementBlock, Fragment, renderList, createVNode, createTextVNode, toDisplayString, createCommentVNode, ref, watch, createElementVNode, Transition, withDirectives, vModelText } from 'vue';
 import { useApi } from '@directus/extensions-sdk';
 
 var _export_sfc = (sfc, props) => {
@@ -114,7 +114,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-35626460] {\n    padding: 20px;\n    background-color: #0d1117;\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-35626460] {\n    margin-bottom: 15px;\n\tpadding: 10px;\n}\n.form-group label[data-v-35626460] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: bold;\n}\n.form-control[data-v-35626460] {\n    width: 90%;\n    padding: 10px;\n    border: 1px solid #ccc;\n    border-radius: 4px;\n}\n.btn[data-v-35626460] {\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n\tbackground-color: #6644ff;\n\tcolor: white;\n    border: none;\n\tmargin: 10px;\n}\n.btn[data-v-35626460]:hover {\n    background-color: #5238c6;\n}\n.btn-debug[data-v-35626460] {\n\tfloat: right;\n}\n.wrapped-pre[data-v-35626460] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 90%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n.pre-container[data-v-35626460] {\n\tmargin-left: 10px;\n\tborder: 2px solid #21262e;\n    position: relative;\n}\n.btn-copy[data-v-35626460] {\n    position: absolute;\n    top: 10px;\n    right: 10px;\n    background-color: #21262e;\n    color: white;\n    border: none;\n    padding: 5px 10px;\n    border-radius: 4px;\n    cursor: pointer;\n}\n.btn-copy[data-v-35626460]:hover {\n    background-color: #30363d;\n}\n";
+var css = "\n.page-body[data-v-1edfedca] {\n    padding: 20px;\n    background-color: var(--theme--background);\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-1edfedca] {\n    margin-bottom: 15px;\n\tpadding: 10px;\n}\n.form-group label[data-v-1edfedca] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-1edfedca] {\n    width: 100%;\n    padding: 10px;\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\n    border-radius: var(--theme--border-radius);\n\tbackground-color: var(--theme--background);\n}\n.btn[data-v-1edfedca] {\n\t\n\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: var(--v-button-font-size, 16px);\n    font-weight: var(--v-button-font-weight, 600);\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n\tbackground-color: var(--theme--primary);\n\tcolor: var(--foreground-inverted);\n    border: none;\n\tmargin: 10px;\n}\n.btn[data-v-1edfedca]:hover {\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-1edfedca] {\n\tfloat: right;\n}\n.wrapped-pre[data-v-1edfedca] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n.pre-container[data-v-1edfedca] {\n\tmargin-left: 10px;\n\tmargin-right: 10px;\n\tborder: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\n\tborder-radius: var(--theme--border-radius);\n    position: relative;\n\tmargin-bottom: 20px;\n}\n.btn-copy[data-v-1edfedca] {\n    position: absolute;\n    right: 0px;\n    background-color: #21262e;\n    color: white;\n    border: none;\n    padding: 5px 10px;\n    border-radius: 4px;\n    cursor: pointer;\n}\n.btn-copy[data-v-1edfedca]:hover {\n    background-color: #30363d;\n}\n.copied-popup[data-v-1edfedca] {\n  position: fixed;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  background-color: var(--theme--primary);\n  color: var(--foreground-inverted);\n  font-size: var(--v-button-font-size, 16px);\n  font-weight: var(--v-button-font-weight, 600);\n  padding: 10px 20px;\n  border-radius: var(--theme--border-radius);\n  z-index: 9999;\n}\n.fade-enter-active[data-v-1edfedca],\n.fade-leave-active[data-v-1edfedca] {\n  transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-1edfedca],\n.fade-leave-to[data-v-1edfedca] {\n  opacity: 0;\n}\n";
 n(css,{});
 
 const _sfc_main = {
@@ -133,7 +133,7 @@ const _sfc_main = {
 		},
 		showJsonRsp() {
 			return this.rspJsonStr !== "";
-		}
+		},
 	},
 	setup(props) {
 		const api = useApi();
@@ -146,7 +146,7 @@ const _sfc_main = {
 		let rspJsonStr = ref("");
 		let rawPageName = "";
 		let bypassTransform = false;
-		let displayBorder = false;
+		let showCopiedPopup = ref(false);
 		
 		render_page(props.page);
 		fetch_all_pages();
@@ -158,7 +158,7 @@ const _sfc_main = {
 			}
 		);
 
-		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, displayBorder, submitForm, debugButton, showInNewTab, copyToClipboard, };
+		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, showCopiedPopup, submitForm, debugButton, showInNewTab, copyToClipboard, };
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
@@ -288,9 +288,16 @@ const _sfc_main = {
 			rspJsonStr.value += "\nRaw Request: " + rawRequest;
 		}
 
-		function copyToClipboard() {
+		async function copyToClipboard() {
 			// pretty print copied text? if no, remove ,null, 2
 			navigator.clipboard.writeText(JSON.stringify(rspJsonStr.value, null, 2));
+			console.log("Before");
+			showCopiedPopup.value = true;
+			setTimeout(() => {
+				showCopiedPopup.value = false;
+				console.log(showCopiedPopup.value);
+			}, 1500); 
+			console.log("after" + showCopiedPopup.value);
 		}
 
 		async function showInNewTab() {
@@ -318,14 +325,18 @@ const _sfc_main = {
 		}
 	},
 };
-const _hoisted_1 = ["innerHTML"];
-const _hoisted_2 = ["for"];
-const _hoisted_3 = ["onUpdate:modelValue", "id"];
-const _hoisted_4 = {
+const _hoisted_1 = {
+  key: 0,
+  class: "copied-popup"
+};
+const _hoisted_2 = ["innerHTML"];
+const _hoisted_3 = ["for"];
+const _hoisted_4 = ["onUpdate:modelValue", "id"];
+const _hoisted_5 = {
   key: 4,
   class: "pre-container"
 };
-const _hoisted_5 = { class: "wrapped-pre" };
+const _hoisted_6 = { class: "wrapped-pre" };
 
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_page_navigation = resolveComponent("page-navigation");
@@ -341,6 +352,16 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       }, null, 8 /* PROPS */, ["current", "pages"])
     ]),
     default: withCtx(() => [
+      createElementVNode("div", null, [
+        createVNode(Transition, { name: "fade" }, {
+          default: withCtx(() => [
+            ($setup.showCopiedPopup)
+              ? (openBlock(), createElementBlock("div", _hoisted_1, "Copied!"))
+              : createCommentVNode("v-if", true)
+          ]),
+          _: 1 /* STABLE */
+        })
+      ]),
       createVNode(_component_router_view, {
         name: "tools-module",
         page: $props.page
@@ -350,19 +371,19 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
             key: 0,
             innerHTML: $setup.page_body,
             class: "page-body"
-          }, null, 8 /* PROPS */, _hoisted_1))
+          }, null, 8 /* PROPS */, _hoisted_2))
         : createCommentVNode("v-if", true),
       (openBlock(true), createElementBlock(Fragment, null, renderList($setup.optionsSet, (origin) => {
         return (openBlock(), createElementBlock("div", {
           key: origin,
           class: "form-group"
         }, [
-          createElementVNode("label", { for: origin }, toDisplayString(origin), 9 /* TEXT, PROPS */, _hoisted_2),
+          createElementVNode("label", { for: origin }, toDisplayString(origin), 9 /* TEXT, PROPS */, _hoisted_3),
           withDirectives(createElementVNode("textarea", {
             "onUpdate:modelValue": $event => (($setup.formData[origin]) = $event),
             id: origin,
             class: "form-control"
-          }, null, 8 /* PROPS */, _hoisted_3), [
+          }, null, 8 /* PROPS */, _hoisted_4), [
             [vModelText, $setup.formData[origin]]
           ])
         ]))
@@ -389,21 +410,21 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
           }, "Debug"))
         : createCommentVNode("v-if", true),
       ($options.showJsonRsp)
-        ? (openBlock(), createElementBlock("div", _hoisted_4, [
+        ? (openBlock(), createElementBlock("div", _hoisted_5, [
             createElementVNode("button", {
               onClick: _cache[3] || (_cache[3] = (...args) => ($setup.copyToClipboard && $setup.copyToClipboard(...args))),
               class: "btn btn-copy"
             }, [
               createVNode(_component_v_icon, { name: "content_copy" })
             ]),
-            createElementVNode("pre", _hoisted_5, toDisplayString($setup.rspJsonStr), 1 /* TEXT */)
+            createElementVNode("pre", _hoisted_6, toDisplayString($setup.rspJsonStr), 1 /* TEXT */)
           ]))
         : createCommentVNode("v-if", true)
     ]),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["title"]))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-35626460"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-1edfedca"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',

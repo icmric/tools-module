@@ -3,7 +3,11 @@
         <template #navigation>
             <page-navigation :current="page" :pages="all_pages" />
         </template>
-
+		<div>
+			<transition name="fade">
+				<div v-if="showCopiedPopup" class="copied-popup">Copied!</div>
+			</transition>
+		</div>
         <router-view name="tools-module" :page="page" />
         <div v-if="page_body" v-html="page_body" class="page-body"></div>
 
@@ -19,12 +23,9 @@
 		<button v-if="!isHomePage" @click="debugButton" class="btn btn-debug">Debug</button>
 
 		<div v-if="showJsonRsp" class="pre-container">
-            <button @click="copyToClipboard" class="btn btn-copy">
-				<v-icon name="content_copy" />				
-			</button>
+            <button @click="copyToClipboard" class="btn btn-copy"><v-icon name="content_copy" /></button>
             <pre class="wrapped-pre">{{ rspJsonStr }}</pre>
         </div>
-		
         
     </private-view>
 </template>
@@ -50,7 +51,7 @@ export default {
 		},
 		showJsonRsp() {
 			return this.rspJsonStr !== "";
-		}
+		},
 	},
 	setup(props) {
 		const api = useApi();
@@ -63,7 +64,7 @@ export default {
 		let rspJsonStr = ref("");
 		let rawPageName = "";
 		let bypassTransform = false;
-		let displayBorder = false;
+		let showCopiedPopup = ref(false);
 		
 		render_page(props.page);
 		fetch_all_pages();
@@ -75,7 +76,7 @@ export default {
 			}
 		);
 
-		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, displayBorder, submitForm, debugButton, showInNewTab, copyToClipboard, };
+		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, showCopiedPopup, submitForm, debugButton, showInNewTab, copyToClipboard, };
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
@@ -205,9 +206,16 @@ export default {
 			rspJsonStr.value += "\nRaw Request: " + rawRequest;
 		}
 
-		function copyToClipboard() {
+		async function copyToClipboard() {
 			// pretty print copied text? if no, remove ,null, 2
 			navigator.clipboard.writeText(JSON.stringify(rspJsonStr.value, null, 2));
+			console.log("Before");
+			showCopiedPopup.value = true;
+			setTimeout(() => {
+				showCopiedPopup.value = false;
+				console.log(showCopiedPopup.value);
+			}, 1500); 
+			console.log("after" + showCopiedPopup.value);
 		}
 
 		async function showInNewTab() {
@@ -240,7 +248,7 @@ export default {
 <style scoped>
 .page-body {
     padding: 20px;
-    background-color: #0d1117;
+    background-color: var(--theme--background);
     border-radius: 8px;
     margin-bottom: 20px;
 }
@@ -253,32 +261,35 @@ export default {
 .form-group label {
     display: block;
     margin-bottom: 5px;
-    font-weight: bold;
+    font-weight: var(--v-button-font-weight, 600);
 }
 
 .form-control {
-    width: 90%;
+    width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));
+    border-radius: var(--theme--border-radius);
+	background-color: var(--theme--background);
 }
 
 .btn {
+	
+
     display: inline-block;
     padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: var(--v-button-font-size, 16px);
+    font-weight: var(--v-button-font-weight, 600);
     text-align: center;
     cursor: pointer;
     border-radius: 4px;
-	background-color: #6644ff;
-	color: white;
+	background-color: var(--theme--primary);
+	color: var(--foreground-inverted);
     border: none;
 	margin: 10px;
 }
 
 .btn:hover {
-    background-color: #5238c6;
+    background-color: var(--theme--primary-accent);
 }
 
 .btn-debug {
@@ -289,7 +300,7 @@ export default {
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    max-width: 90%;
+    max-width: 100%;
     background-color: #0d1117;
     padding: 10px;
     border-radius: 4px;
@@ -298,14 +309,16 @@ export default {
 
 .pre-container {
 	margin-left: 10px;
-	border: 2px solid #21262e;
+	margin-right: 10px;
+	border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));
+	border-radius: var(--theme--border-radius);
     position: relative;
+	margin-bottom: 20px;
 }
 
 .btn-copy {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    right: 0px;
     background-color: #21262e;
     color: white;
     border: none;
@@ -316,5 +329,28 @@ export default {
 
 .btn-copy:hover {
     background-color: #30363d;
+}
+
+.copied-popup {
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--theme--primary);
+  color: var(--foreground-inverted);
+  font-size: var(--v-button-font-size, 16px);
+  font-weight: var(--v-button-font-weight, 600);
+  padding: 10px 20px;
+  border-radius: var(--theme--border-radius);
+  z-index: 9999;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
