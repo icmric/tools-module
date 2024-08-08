@@ -1,38 +1,43 @@
 <template>
-    <private-view :title="page_title">
-        <template #navigation>
-            <page-navigation :current="page" :pages="all_pages" />
-        </template>
+	<private-view :title="pageTitle">
+		<template #navigation>
+			<page-navigation :current="page" :pages="all_pages" />
+		</template>
 		<div>
 			<transition name="fade">
 				<div v-if="showCopiedPopup" class="copied-popup">Copied!</div>
 			</transition>
 		</div>
-        <router-view name="tools-module" :page="page" />
-        <div v-if="page_body" v-html="page_body" class="page-body"></div>
+		<router-view name="tools-module" :page="page" />
+		<div v-if="page_body" v-html="page_body" class="page-body"></div>
 
-        <div v-for="origin in optionsSet" :key="origin" class="form-group">
-            <label :for="origin">{{ origin }}</label>
-            <textarea v-model="formData[origin]" :id="origin" class="form-control"></textarea>
-        </div>
-        
-        <button v-if="!isHomePage" @click="submitForm" class="btn btn-primary">Submit</button>
+		<div v-if="missingCollections.length > 0">
+			<p>Missing the following collections {{ missingCollections }}</p>
+			<button class="btn">Generate Collections?</button>
+		</div>
+
+		<div v-for="origin in optionsSet" :key="origin" class="form-group">
+			<label :for="origin">{{ origin }}</label>
+			<textarea v-model="formData[origin]" :id="origin" class="form-control"></textarea>
+		</div>
+
+		<button v-if="!isHomePage" @click="submitForm" class="btn btn-primary">Submit</button>
 
 		<button v-if="!isHomePage" @click="showInNewTab" class="btn btn-new-tab">Show In New Tab</button>
 
 		<button v-if="!isHomePage" @click="debugButton" class="btn btn-debug">Debug</button>
 
 		<div v-if="showJsonRsp" class="pre-container">
-            <button @click="copyToClipboard" class="btn btn-copy"><v-icon name="content_copy" /></button>
-            <pre class="wrapped-pre">{{ rspJsonStr }}</pre>
-        </div>
-        
-    </private-view>
+			<button @click="copyToClipboard" class="btn btn-copy"><v-icon name="content_copy" /></button>
+			<pre class="wrapped-pre">{{ rspJsonStr }}</pre>
+		</div>
+
+	</private-view>
 </template>
 
 <script>
 import { ref, watch } from 'vue';
-import { useApi } from '@directus/extensions-sdk';
+import { useApi, useStores } from '@directus/extensions-sdk';
 import PageNavigation from './components/navigation.vue';
 
 export default {
@@ -43,6 +48,14 @@ export default {
 		page: {
 			type: String,
 			default: 'home',
+		},
+		pageTitle: {
+			type: String,
+			default: '',
+		},
+		missingCollections: {
+			type: Array,
+			default: [],
 		},
 	},
 	computed: {
@@ -65,10 +78,21 @@ export default {
 		let rawPageName = "";
 		let bypassTransform = false;
 		let showCopiedPopup = ref(false);
-		
+
+		const { useCollectionsStore } = useStores();
+		const collectionsStore = useCollectionsStore();
+
+		// would query for individual collections or query for all and loop be more efficent? would it make a notible diffrence?
+		if (collectionsStore.getCollection("resources") == null) {
+			props.missingCollections.push("resources");
+		}
+		if (collectionsStore.getCollection("retrieves") == null) {
+			props.missingCollections.push("retrieves");
+		} 
+
 		render_page(props.page);
 		fetch_all_pages();
-		
+
 		watch(
 			() => props.page,
 			async () => {
@@ -82,7 +106,7 @@ export default {
 			let keys = Object.keys(obj);
 			for (let i = 0; i < keys.length; i++) {
 				if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
-					recursiveFind(obj[keys[i]]);	
+					recursiveFind(obj[keys[i]]);
 				} else {
 					let parseResult = parse_placeholders(obj[keys[i]]);
 					if (parseResult != null) {
@@ -113,20 +137,20 @@ export default {
 			rawPageName = "";
 
 			if (page === 'home') {
-				page_title.value = 'Tools';
+				props.pageTitle = 'Tools';
 				page_body.value = 'Please select a tool on the left to get started!';
 			} else {
 				api.get(`/items/resources?fields=*,retrieves.*&filter[title][_eq]=${page}`).then((rsp) => {
 					if (rsp.data.data) {
 						rsp.data.data.forEach(item => {
 							rawPageName = item.title;
-							page_title.value = transformTitle(item.title);
+							props.pageTitle = transformTitle(item.title);
 							page_body.value = item.description;
 							rawRequest = item.main;
 							recursiveFind(rsp.data.data[0]);
 						});
 					} else {
-						page_title.value = "404: Not Found";
+						props.pageTitle = "404: Not Found";
 					}
 				}).catch((error) => {
 					console.log(error);
@@ -155,9 +179,9 @@ export default {
 		}
 
 		function transformTitle(title) {
-            title = title.replace(/-/g, ' ');
-            return title.charAt(0).toUpperCase() + title.slice(1);
-        }
+			title = title.replace(/-/g, ' ');
+			return title.charAt(0).toUpperCase() + title.slice(1);
+		}
 
 		function parse_placeholders(text) {
 			const regex = /{(.*?)}/g; // Non-greedy match
@@ -182,7 +206,7 @@ export default {
 				"body": formData.value,
 				"bypassTransform": bypassTransform,
 			};
-			
+
 			await api.post(buildApiUrl(), postReqData).then((rsp) => {
 				let jsonRsp = rsp.data;
 				rspJsonStr.value = jsonRsp;
@@ -209,13 +233,11 @@ export default {
 		async function copyToClipboard() {
 			// pretty print copied text? if no, remove ,null, 2
 			navigator.clipboard.writeText(JSON.stringify(rspJsonStr.value, null, 2));
-			console.log("Before");
 			showCopiedPopup.value = true;
 			setTimeout(() => {
 				showCopiedPopup.value = false;
 				console.log(showCopiedPopup.value);
-			}, 1500); 
-			console.log("after" + showCopiedPopup.value);
+			}, 1500);
 		}
 
 		async function showInNewTab() {
@@ -236,60 +258,62 @@ export default {
 						}
 					});
 				}
-			}	
+			}
 
 			// .replace only used when making GET request from here
 			return url.replace("$request.", "");
 		}
+	},
+	methods: {
 	},
 };
 </script>
 
 <style scoped>
 .page-body {
-    padding: 20px;
-    background-color: var(--theme--background);
-    border-radius: 8px;
-    margin-bottom: 20px;
+	padding: 20px;
+	background-color: var(--theme--background);
+	border-radius: 8px;
+	margin-bottom: 20px;
 }
 
 .form-group {
-    margin-bottom: 15px;
+	margin-bottom: 15px;
 	padding: 10px;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: var(--v-button-font-weight, 600);
+	display: block;
+	margin-bottom: 5px;
+	font-weight: var(--v-button-font-weight, 600);
 }
 
 .form-control {
-    width: 100%;
-    padding: 10px;
-    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));
-    border-radius: var(--theme--border-radius);
+	width: 100%;
+	padding: 10px;
+	border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));
+	border-radius: var(--theme--border-radius);
 	background-color: var(--theme--background);
 }
 
 .btn {
-	
 
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: var(--v-button-font-size, 16px);
-    font-weight: var(--v-button-font-weight, 600);
-    text-align: center;
-    cursor: pointer;
-    border-radius: 4px;
+
+	display: inline-block;
+	padding: 10px 20px;
+	font-size: var(--v-button-font-size, 16px);
+	font-weight: var(--v-button-font-weight, 600);
+	text-align: center;
+	cursor: pointer;
+	border-radius: 4px;
 	background-color: var(--theme--primary);
 	color: var(--foreground-inverted);
-    border: none;
+	border: none;
 	margin: 10px;
 }
 
 .btn:hover {
-    background-color: var(--theme--primary-accent);
+	background-color: var(--theme--primary-accent);
 }
 
 .btn-debug {
@@ -297,14 +321,14 @@ export default {
 }
 
 .wrapped-pre {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    max-width: 100%;
-    background-color: #0d1117;
-    padding: 10px;
-    border-radius: 4px;
-    margin-top: 20px;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	max-width: 100%;
+	background-color: #0d1117;
+	padding: 10px;
+	border-radius: 4px;
+	margin-top: 20px;
 }
 
 .pre-container {
@@ -312,45 +336,45 @@ export default {
 	margin-right: 10px;
 	border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));
 	border-radius: var(--theme--border-radius);
-    position: relative;
+	position: relative;
 	margin-bottom: 20px;
 }
 
 .btn-copy {
-    position: absolute;
-    right: 0px;
-    background-color: #21262e;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
+	position: absolute;
+	right: 0px;
+	background-color: #21262e;
+	color: white;
+	border: none;
+	padding: 5px 10px;
+	border-radius: 4px;
+	cursor: pointer;
 }
 
 .btn-copy:hover {
-    background-color: #30363d;
+	background-color: #30363d;
 }
 
 .copied-popup {
-  position: fixed;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: var(--theme--primary);
-  color: var(--foreground-inverted);
-  font-size: var(--v-button-font-size, 16px);
-  font-weight: var(--v-button-font-weight, 600);
-  padding: 10px 20px;
-  border-radius: var(--theme--border-radius);
-  z-index: 9999;
+	position: fixed;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: var(--theme--primary);
+	color: var(--foreground-inverted);
+	font-size: var(--v-button-font-size, 16px);
+	font-weight: var(--v-button-font-weight, 600);
+	padding: 10px 20px;
+	border-radius: var(--theme--border-radius);
+	z-index: 9999;
 }
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease-in-out;
+	transition: opacity 0.3s ease-in-out;
 }
 
 .fade-enter-from,
 .fade-leave-to {
-  opacity: 0;
+	opacity: 0;
 }
 </style>
