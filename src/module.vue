@@ -135,9 +135,10 @@ export default {
 		}
 
 		function fetch_all_pages() {
-			api.get('/items/resources?fields=*,displayGroup.*').then((rsp) => {
+			api.get('/items/resources?fields=*').then((rsp) => {
 				all_pages.value = [];
 				rsp.data.data.forEach(item => {
+					console.log(item);
 					let group = item.displayGroup;
 					if (group == null) {
 						group = "Misc";
@@ -209,13 +210,10 @@ export default {
 		async function copyToClipboard() {
 			// pretty print copied text? if no, remove ,null, 2
 			navigator.clipboard.writeText(JSON.stringify(rspJsonStr.value, null, 2));
-			console.log("Before");
 			showCopiedPopup.value = true;
 			setTimeout(() => {
 				showCopiedPopup.value = false;
-				console.log(showCopiedPopup.value);
 			}, 1500); 
-			console.log("after" + showCopiedPopup.value);
 		}
 
 		async function showInNewTab() {

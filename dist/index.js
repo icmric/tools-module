@@ -1,4 +1,4 @@
-import { resolveComponent, openBlock, createBlock, withCtx, createElementBlock, Fragment, renderList, createVNode, createTextVNode, toDisplayString, createCommentVNode, ref, watch, createElementVNode, Transition, withDirectives, vModelText } from 'vue';
+import { resolveComponent, openBlock, createBlock, withCtx, createElementBlock, Fragment, renderList, createVNode, createTextVNode, toDisplayString, createElementVNode, createCommentVNode, ref, watch, Transition, withDirectives, vModelText } from 'vue';
 import { useApi } from '@directus/extensions-sdk';
 
 var _export_sfc = (sfc, props) => {
@@ -32,6 +32,12 @@ const _sfc_main$1 = {
       this.groupPages(newVal);
     },
   },
+  computed: {
+    test() {
+      // NOT WORKING. pushes to page, but then :to overrides it and sends it to normal page. cant seem to use v-if, find some way to conditioanlly use :to OR take button out of selection area
+      this.$router.push("content/resources");
+    },
+  },
   methods: {
     groupPages(pages) {
       this.groupedPages = pages.reduce((groups, page) => {
@@ -55,6 +61,7 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_v_list_item = resolveComponent("v-list-item");
   const _component_v_text_overflow = resolveComponent("v-text-overflow");
   const _component_v_list_item_content = resolveComponent("v-list-item-content");
+  const _component_v_icon = resolveComponent("v-icon");
   const _component_v_list_group = resolveComponent("v-list-group");
   const _component_v_list = resolveComponent("v-list");
 
@@ -96,7 +103,15 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
                           }, null, 8 /* PROPS */, ["text"])
                         ]),
                         _: 2 /* DYNAMIC */
-                      }, 1024 /* DYNAMIC_SLOTS */)
+                      }, 1024 /* DYNAMIC_SLOTS */),
+                      createElementVNode("button", {
+                        onClick: _cache[0] || (_cache[0] = (...args) => ($options.test && $options.test(...args)))
+                      }, [
+                        createVNode(_component_v_icon, {
+                          name: "open_in_new",
+                          class: "open-icon"
+                        })
+                      ])
                     ]),
                     _: 2 /* DYNAMIC */
                   }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["active", "to"]))
@@ -114,7 +129,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-1edfedca] {\n    padding: 20px;\n    background-color: var(--theme--background);\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-1edfedca] {\n    margin-bottom: 15px;\n\tpadding: 10px;\n}\n.form-group label[data-v-1edfedca] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-1edfedca] {\n    width: 100%;\n    padding: 10px;\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\n    border-radius: var(--theme--border-radius);\n\tbackground-color: var(--theme--background);\n}\n.btn[data-v-1edfedca] {\n\t\n\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: var(--v-button-font-size, 16px);\n    font-weight: var(--v-button-font-weight, 600);\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n\tbackground-color: var(--theme--primary);\n\tcolor: var(--foreground-inverted);\n    border: none;\n\tmargin: 10px;\n}\n.btn[data-v-1edfedca]:hover {\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-1edfedca] {\n\tfloat: right;\n}\n.wrapped-pre[data-v-1edfedca] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n.pre-container[data-v-1edfedca] {\n\tmargin-left: 10px;\n\tmargin-right: 10px;\n\tborder: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\n\tborder-radius: var(--theme--border-radius);\n    position: relative;\n\tmargin-bottom: 20px;\n}\n.btn-copy[data-v-1edfedca] {\n    position: absolute;\n    right: 0px;\n    background-color: #21262e;\n    color: white;\n    border: none;\n    padding: 5px 10px;\n    border-radius: 4px;\n    cursor: pointer;\n}\n.btn-copy[data-v-1edfedca]:hover {\n    background-color: #30363d;\n}\n.copied-popup[data-v-1edfedca] {\n  position: fixed;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  background-color: var(--theme--primary);\n  color: var(--foreground-inverted);\n  font-size: var(--v-button-font-size, 16px);\n  font-weight: var(--v-button-font-weight, 600);\n  padding: 10px 20px;\n  border-radius: var(--theme--border-radius);\n  z-index: 9999;\n}\n.fade-enter-active[data-v-1edfedca],\n.fade-leave-active[data-v-1edfedca] {\n  transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-1edfedca],\n.fade-leave-to[data-v-1edfedca] {\n  opacity: 0;\n}\n";
+var css = "\n.page-body[data-v-edff0e75] {\n    padding: 20px;\n    background-color: var(--theme--background);\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-edff0e75] {\n    margin-bottom: 15px;\n\tpadding: 10px;\n}\n.form-group label[data-v-edff0e75] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-edff0e75] {\n    width: 100%;\n    padding: 10px;\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\n    border-radius: var(--theme--border-radius);\n\tbackground-color: var(--theme--background);\n}\n.btn[data-v-edff0e75] {\n\t\n\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: var(--v-button-font-size, 16px);\n    font-weight: var(--v-button-font-weight, 600);\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n\tbackground-color: var(--theme--primary);\n\tcolor: var(--foreground-inverted);\n    border: none;\n\tmargin: 10px;\n}\n.btn[data-v-edff0e75]:hover {\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-edff0e75] {\n\tfloat: right;\n}\n.wrapped-pre[data-v-edff0e75] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n.pre-container[data-v-edff0e75] {\n\tmargin-left: 10px;\n\tmargin-right: 10px;\n\tborder: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\n\tborder-radius: var(--theme--border-radius);\n    position: relative;\n\tmargin-bottom: 20px;\n}\n.btn-copy[data-v-edff0e75] {\n    position: absolute;\n    right: 0px;\n    background-color: #21262e;\n    color: white;\n    border: none;\n    padding: 5px 10px;\n    border-radius: 4px;\n    cursor: pointer;\n}\n.btn-copy[data-v-edff0e75]:hover {\n    background-color: #30363d;\n}\n.copied-popup[data-v-edff0e75] {\n  position: fixed;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  background-color: var(--theme--primary);\n  color: var(--foreground-inverted);\n  font-size: var(--v-button-font-size, 16px);\n  font-weight: var(--v-button-font-weight, 600);\n  padding: 10px 20px;\n  border-radius: var(--theme--border-radius);\n  z-index: 9999;\n}\n.fade-enter-active[data-v-edff0e75],\n.fade-leave-active[data-v-edff0e75] {\n  transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-edff0e75],\n.fade-leave-to[data-v-edff0e75] {\n  opacity: 0;\n}\n";
 n(css,{});
 
 const _sfc_main = {
@@ -217,9 +232,10 @@ const _sfc_main = {
 		}
 
 		function fetch_all_pages() {
-			api.get('/items/resources?fields=*,displayGroup.*').then((rsp) => {
+			api.get('/items/resources?fields=*').then((rsp) => {
 				all_pages.value = [];
 				rsp.data.data.forEach(item => {
+					console.log(item);
 					let group = item.displayGroup;
 					if (group == null) {
 						group = "Misc";
@@ -291,13 +307,10 @@ const _sfc_main = {
 		async function copyToClipboard() {
 			// pretty print copied text? if no, remove ,null, 2
 			navigator.clipboard.writeText(JSON.stringify(rspJsonStr.value, null, 2));
-			console.log("Before");
 			showCopiedPopup.value = true;
 			setTimeout(() => {
 				showCopiedPopup.value = false;
-				console.log(showCopiedPopup.value);
 			}, 1500); 
-			console.log("after" + showCopiedPopup.value);
 		}
 
 		async function showInNewTab() {
@@ -424,7 +437,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["title"]))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-1edfedca"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-edff0e75"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',
