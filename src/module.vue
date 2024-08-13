@@ -63,6 +63,7 @@ export default {
 		const page_title = ref('');
 		const page_body = ref('');
 		const formData = ref({});
+		const searchParams = new URLSearchParams(window.location.search);
 		let pageID = "";
 		let rawRequest = "";
 		let optionsSet = new Set();
@@ -131,6 +132,12 @@ export default {
 							recursiveFind(rsp.data.data[0]);
 							pageID = item.id;
 						});
+						searchParams.forEach((value, key) => {
+							console.log(key + " " + value);
+							//if (optionsSet.has(key)) {
+							//	formData.value[key] = value;
+							//};
+						});
 					} else {
 						page_title.value = "404: Not Found";
 					}
@@ -147,7 +154,6 @@ export default {
 			api.get('/items/resources?fields=*,displayGroup.*').then((rsp) => {
 				all_pages.value = [];
 				rsp.data.data.forEach(item => {
-					console.log(item);
 					let group = item.displayGroup;
 					if (group == null) {
 						group = "Misc";
