@@ -3,6 +3,10 @@
         <template #navigation>
             <page-navigation :current="page" :pages="all_pages" />
         </template>
+		<template #title-outer:append v-if="!isHomePage">
+			<v-icon name="open_in_new" @click="openResource" />
+		</template>
+
 		<div>
 			<transition name="fade">
 				<div v-if="showCopiedPopup" class="copied-popup">Copied!</div>
@@ -59,6 +63,7 @@ export default {
 		const page_title = ref('');
 		const page_body = ref('');
 		const formData = ref({});
+		let pageID = "";
 		let rawRequest = "";
 		let optionsSet = new Set();
 		let rspJsonStr = ref("");
@@ -76,7 +81,7 @@ export default {
 			}
 		);
 
-		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, showCopiedPopup, submitForm, debugButton, showInNewTab, copyToClipboard, };
+		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, showCopiedPopup, submitForm, debugButton, showInNewTab, copyToClipboard, openResource, };
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
@@ -124,6 +129,7 @@ export default {
 							page_body.value = item.description;
 							rawRequest = item.main;
 							recursiveFind(rsp.data.data[0]);
+							pageID = item.id;
 						});
 					} else {
 						page_title.value = "404: Not Found";
@@ -135,6 +141,9 @@ export default {
 		}
 
 		function fetch_all_pages() {
+			// This and openResource are done dodgily, resources is hard coded
+			// works for now, will need to be updated to be dynamic when making renders
+			// Create invisible field in each item which has the name of the group (resources, renders, etc)??
 			api.get('/items/resources?fields=*,displayGroup.*').then((rsp) => {
 				all_pages.value = [];
 				rsp.data.data.forEach(item => {
@@ -147,6 +156,7 @@ export default {
 						label: transformTitle(item.title),
 						to: `/tools-module/${item.title}`,
 						group: group,
+						ID: item.id,
 					});
 				});
 			}).catch((error) => {
@@ -240,6 +250,16 @@ export default {
 
 			// .replace only used when making GET request from here
 			return url.replace("$request.", "");
+		}
+
+		function openResource() {
+			//console.log(pageID);
+			
+			try {
+				window.open("/admin/content/resources/" + pageID);
+			} catch (error) {
+				rspJsonStr.value = "Error opening resource";
+			}
 		}
 	},
 };

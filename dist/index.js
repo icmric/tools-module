@@ -1,4 +1,4 @@
-import { resolveComponent, openBlock, createBlock, withCtx, createElementBlock, Fragment, renderList, createVNode, createTextVNode, toDisplayString, createCommentVNode, ref, watch, createElementVNode, Transition, withDirectives, vModelText } from 'vue';
+import { resolveComponent, openBlock, createBlock, withCtx, createElementBlock, Fragment, renderList, createVNode, createTextVNode, toDisplayString, createCommentVNode, ref, watch, createSlots, createElementVNode, Transition, withDirectives, vModelText } from 'vue';
 import { useApi } from '@directus/extensions-sdk';
 
 var _export_sfc = (sfc, props) => {
@@ -114,7 +114,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-1edfedca] {\n    padding: 20px;\n    background-color: var(--theme--background);\n    border-radius: 8px;\n    margin-bottom: 20px;\n}\n.form-group[data-v-1edfedca] {\n    margin-bottom: 15px;\n\tpadding: 10px;\n}\n.form-group label[data-v-1edfedca] {\n    display: block;\n    margin-bottom: 5px;\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-1edfedca] {\n    width: 100%;\n    padding: 10px;\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\n    border-radius: var(--theme--border-radius);\n\tbackground-color: var(--theme--background);\n}\n.btn[data-v-1edfedca] {\n\t\n\n    display: inline-block;\n    padding: 10px 20px;\n    font-size: var(--v-button-font-size, 16px);\n    font-weight: var(--v-button-font-weight, 600);\n    text-align: center;\n    cursor: pointer;\n    border-radius: 4px;\n\tbackground-color: var(--theme--primary);\n\tcolor: var(--foreground-inverted);\n    border: none;\n\tmargin: 10px;\n}\n.btn[data-v-1edfedca]:hover {\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-1edfedca] {\n\tfloat: right;\n}\n.wrapped-pre[data-v-1edfedca] {\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    overflow-wrap: break-word;\n    max-width: 100%;\n    background-color: #0d1117;\n    padding: 10px;\n    border-radius: 4px;\n    margin-top: 20px;\n}\n.pre-container[data-v-1edfedca] {\n\tmargin-left: 10px;\n\tmargin-right: 10px;\n\tborder: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\n\tborder-radius: var(--theme--border-radius);\n    position: relative;\n\tmargin-bottom: 20px;\n}\n.btn-copy[data-v-1edfedca] {\n    position: absolute;\n    right: 0px;\n    background-color: #21262e;\n    color: white;\n    border: none;\n    padding: 5px 10px;\n    border-radius: 4px;\n    cursor: pointer;\n}\n.btn-copy[data-v-1edfedca]:hover {\n    background-color: #30363d;\n}\n.copied-popup[data-v-1edfedca] {\n  position: fixed;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  background-color: var(--theme--primary);\n  color: var(--foreground-inverted);\n  font-size: var(--v-button-font-size, 16px);\n  font-weight: var(--v-button-font-weight, 600);\n  padding: 10px 20px;\n  border-radius: var(--theme--border-radius);\n  z-index: 9999;\n}\n.fade-enter-active[data-v-1edfedca],\n.fade-leave-active[data-v-1edfedca] {\n  transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-1edfedca],\n.fade-leave-to[data-v-1edfedca] {\n  opacity: 0;\n}\n";
+var css = "\n.page-body[data-v-00564ae5] {\r\n    padding: 20px;\r\n    background-color: var(--theme--background);\r\n    border-radius: 8px;\r\n    margin-bottom: 20px;\n}\n.form-group[data-v-00564ae5] {\r\n    margin-bottom: 15px;\r\n\tpadding: 10px;\n}\n.form-group label[data-v-00564ae5] {\r\n    display: block;\r\n    margin-bottom: 5px;\r\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-00564ae5] {\r\n    width: 100%;\r\n    padding: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n\tbackground-color: var(--theme--background);\n}\n.btn[data-v-00564ae5] {\r\n\t\r\n\r\n    display: inline-block;\r\n    padding: 10px 20px;\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    text-align: center;\r\n    cursor: pointer;\r\n    border-radius: 4px;\r\n\tbackground-color: var(--theme--primary);\r\n\tcolor: var(--foreground-inverted);\r\n    border: none;\r\n\tmargin: 10px;\n}\n.btn[data-v-00564ae5]:hover {\r\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-00564ae5] {\r\n\tfloat: right;\n}\n.wrapped-pre[data-v-00564ae5] {\r\n    white-space: pre-wrap;\r\n    word-wrap: break-word;\r\n    overflow-wrap: break-word;\r\n    max-width: 100%;\r\n    background-color: #0d1117;\r\n    padding: 10px;\r\n    border-radius: 4px;\r\n    margin-top: 20px;\n}\n.pre-container[data-v-00564ae5] {\r\n\tmargin-left: 10px;\r\n\tmargin-right: 10px;\r\n\tborder: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n\tborder-radius: var(--theme--border-radius);\r\n    position: relative;\r\n\tmargin-bottom: 20px;\n}\n.btn-copy[data-v-00564ae5] {\r\n    position: absolute;\r\n    right: 0px;\r\n    background-color: #21262e;\r\n    color: white;\r\n    border: none;\r\n    padding: 5px 10px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\n}\n.btn-copy[data-v-00564ae5]:hover {\r\n    background-color: #30363d;\n}\n.copied-popup[data-v-00564ae5] {\r\n  position: fixed;\r\n  left: 50%;\r\n  transform: translate(-50%, -50%);\r\n  background-color: var(--theme--primary);\r\n  color: var(--foreground-inverted);\r\n  font-size: var(--v-button-font-size, 16px);\r\n  font-weight: var(--v-button-font-weight, 600);\r\n  padding: 10px 20px;\r\n  border-radius: var(--theme--border-radius);\r\n  z-index: 9999;\n}\n.fade-enter-active[data-v-00564ae5],\r\n.fade-leave-active[data-v-00564ae5] {\r\n  transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-00564ae5],\r\n.fade-leave-to[data-v-00564ae5] {\r\n  opacity: 0;\n}\r\n";
 n(css,{});
 
 const _sfc_main = {
@@ -141,6 +141,7 @@ const _sfc_main = {
 		const page_title = ref('');
 		const page_body = ref('');
 		const formData = ref({});
+		let pageID = "";
 		let rawRequest = "";
 		let optionsSet = new Set();
 		let rspJsonStr = ref("");
@@ -158,7 +159,7 @@ const _sfc_main = {
 			}
 		);
 
-		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, showCopiedPopup, submitForm, debugButton, showInNewTab, copyToClipboard, };
+		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, showCopiedPopup, submitForm, debugButton, showInNewTab, copyToClipboard, openResource, };
 
 		function recursiveFind(obj) {
 			let keys = Object.keys(obj);
@@ -206,6 +207,7 @@ const _sfc_main = {
 							page_body.value = item.description;
 							rawRequest = item.main;
 							recursiveFind(rsp.data.data[0]);
+							pageID = item.id;
 						});
 					} else {
 						page_title.value = "404: Not Found";
@@ -217,6 +219,9 @@ const _sfc_main = {
 		}
 
 		function fetch_all_pages() {
+			// This and openResource are done dodgily, resources is hard coded
+			// works for now, will need to be updated to be dynamic when making renders
+			// Create invisible field in each item which has the name of the group (resources, renders, etc)??
 			api.get('/items/resources?fields=*,displayGroup.*').then((rsp) => {
 				all_pages.value = [];
 				rsp.data.data.forEach(item => {
@@ -229,6 +234,7 @@ const _sfc_main = {
 						label: transformTitle(item.title),
 						to: `/tools-module/${item.title}`,
 						group: group,
+						ID: item.id,
 					});
 				});
 			}).catch((error) => {
@@ -323,6 +329,16 @@ const _sfc_main = {
 			// .replace only used when making GET request from here
 			return url.replace("$request.", "");
 		}
+
+		function openResource() {
+			//console.log(pageID);
+			
+			try {
+				window.open("/admin/content/resources/" + pageID);
+			} catch (error) {
+				rspJsonStr.value = "Error opening resource";
+			}
+		}
 	},
 };
 const _hoisted_1 = {
@@ -340,11 +356,11 @@ const _hoisted_6 = { class: "wrapped-pre" };
 
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_page_navigation = resolveComponent("page-navigation");
-  const _component_router_view = resolveComponent("router-view");
   const _component_v_icon = resolveComponent("v-icon");
+  const _component_router_view = resolveComponent("router-view");
   const _component_private_view = resolveComponent("private-view");
 
-  return (openBlock(), createBlock(_component_private_view, { title: $setup.page_title }, {
+  return (openBlock(), createBlock(_component_private_view, { title: $setup.page_title }, createSlots({
     navigation: withCtx(() => [
       createVNode(_component_page_navigation, {
         current: $props.page,
@@ -421,10 +437,23 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
           ]))
         : createCommentVNode("v-if", true)
     ]),
-    _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["title"]))
+    _: 2 /* DYNAMIC */
+  }, [
+    (!$options.isHomePage)
+      ? {
+          name: "title-outer:append",
+          fn: withCtx(() => [
+            createVNode(_component_v_icon, {
+              name: "open_in_new",
+              onClick: $setup.openResource
+            }, null, 8 /* PROPS */, ["onClick"])
+          ]),
+          key: "0"
+        }
+      : undefined
+  ]), 1032 /* PROPS, DYNAMIC_SLOTS */, ["title"]))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-1edfedca"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-00564ae5"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',
