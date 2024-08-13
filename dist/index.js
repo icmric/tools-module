@@ -32,6 +32,12 @@ const _sfc_main$1 = {
       this.groupPages(newVal);
     },
   },
+  computed: {
+    test() {
+      // NOT WORKING. pushes to page, but then :to overrides it and sends it to normal page. cant seem to use v-if, find some way to conditioanlly use :to OR take button out of selection area
+      this.$router.push("content/resources");
+    },
+  },
   methods: {
     groupPages(pages) {
       this.groupedPages = pages.reduce((groups, page) => {
@@ -55,6 +61,7 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_v_list_item = resolveComponent("v-list-item");
   const _component_v_text_overflow = resolveComponent("v-text-overflow");
   const _component_v_list_item_content = resolveComponent("v-list-item-content");
+  const _component_v_icon = resolveComponent("v-icon");
   const _component_v_list_group = resolveComponent("v-list-group");
   const _component_v_list = resolveComponent("v-list");
 
@@ -96,7 +103,15 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
                           }, null, 8 /* PROPS */, ["text"])
                         ]),
                         _: 2 /* DYNAMIC */
-                      }, 1024 /* DYNAMIC_SLOTS */)
+                      }, 1024 /* DYNAMIC_SLOTS */),
+                      createElementVNode("button", {
+                        onClick: _cache[0] || (_cache[0] = (...args) => ($options.test && $options.test(...args)))
+                      }, [
+                        createVNode(_component_v_icon, {
+                          name: "open_in_new",
+                          class: "open-icon"
+                        })
+                      ])
                     ]),
                     _: 2 /* DYNAMIC */
                   }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["active", "to"]))
@@ -225,6 +240,7 @@ const _sfc_main = {
 			api.get('/items/resources?fields=*,displayGroup.*').then((rsp) => {
 				all_pages.value = [];
 				rsp.data.data.forEach(item => {
+					console.log(item);
 					let group = item.displayGroup;
 					if (group == null) {
 						group = "Misc";
@@ -297,13 +313,10 @@ const _sfc_main = {
 		async function copyToClipboard() {
 			// pretty print copied text? if no, remove ,null, 2
 			navigator.clipboard.writeText(JSON.stringify(rspJsonStr.value, null, 2));
-			console.log("Before");
 			showCopiedPopup.value = true;
 			setTimeout(() => {
 				showCopiedPopup.value = false;
-				console.log(showCopiedPopup.value);
 			}, 1500); 
-			console.log("after" + showCopiedPopup.value);
 		}
 
 		async function showInNewTab() {
