@@ -32,12 +32,6 @@ const _sfc_main$1 = {
       this.groupPages(newVal);
     },
   },
-  computed: {
-    test() {
-      // NOT WORKING. pushes to page, but then :to overrides it and sends it to normal page. cant seem to use v-if, find some way to conditioanlly use :to OR take button out of selection area
-      this.$router.push("content/resources");
-    },
-  },
   methods: {
     groupPages(pages) {
       this.groupedPages = pages.reduce((groups, page) => {
@@ -61,7 +55,6 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_v_list_item = resolveComponent("v-list-item");
   const _component_v_text_overflow = resolveComponent("v-text-overflow");
   const _component_v_list_item_content = resolveComponent("v-list-item-content");
-  const _component_v_icon = resolveComponent("v-icon");
   const _component_v_list_group = resolveComponent("v-list-group");
   const _component_v_list = resolveComponent("v-list");
 
@@ -103,15 +96,7 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
                           }, null, 8 /* PROPS */, ["text"])
                         ]),
                         _: 2 /* DYNAMIC */
-                      }, 1024 /* DYNAMIC_SLOTS */),
-                      createElementVNode("button", {
-                        onClick: _cache[0] || (_cache[0] = (...args) => ($options.test && $options.test(...args)))
-                      }, [
-                        createVNode(_component_v_icon, {
-                          name: "open_in_new",
-                          class: "open-icon"
-                        })
-                      ])
+                      }, 1024 /* DYNAMIC_SLOTS */)
                     ]),
                     _: 2 /* DYNAMIC */
                   }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["active", "to"]))
@@ -129,7 +114,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-00564ae5] {\r\n    padding: 20px;\r\n    background-color: var(--theme--background);\r\n    border-radius: 8px;\r\n    margin-bottom: 20px;\n}\n.form-group[data-v-00564ae5] {\r\n    margin-bottom: 15px;\r\n\tpadding: 10px;\n}\n.form-group label[data-v-00564ae5] {\r\n    display: block;\r\n    margin-bottom: 5px;\r\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-00564ae5] {\r\n    width: 100%;\r\n    padding: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n\tbackground-color: var(--theme--background);\n}\n.btn[data-v-00564ae5] {\r\n\t\r\n\r\n    display: inline-block;\r\n    padding: 10px 20px;\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    text-align: center;\r\n    cursor: pointer;\r\n    border-radius: 4px;\r\n\tbackground-color: var(--theme--primary);\r\n\tcolor: var(--foreground-inverted);\r\n    border: none;\r\n\tmargin: 10px;\n}\n.btn[data-v-00564ae5]:hover {\r\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-00564ae5] {\r\n\tfloat: right;\n}\n.wrapped-pre[data-v-00564ae5] {\r\n    white-space: pre-wrap;\r\n    word-wrap: break-word;\r\n    overflow-wrap: break-word;\r\n    max-width: 100%;\r\n    background-color: #0d1117;\r\n    padding: 10px;\r\n    border-radius: 4px;\r\n    margin-top: 20px;\n}\n.pre-container[data-v-00564ae5] {\r\n\tmargin-left: 10px;\r\n\tmargin-right: 10px;\r\n\tborder: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n\tborder-radius: var(--theme--border-radius);\r\n    position: relative;\r\n\tmargin-bottom: 20px;\n}\n.btn-copy[data-v-00564ae5] {\r\n    position: absolute;\r\n    right: 0px;\r\n    background-color: #21262e;\r\n    color: white;\r\n    border: none;\r\n    padding: 5px 10px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\n}\n.btn-copy[data-v-00564ae5]:hover {\r\n    background-color: #30363d;\n}\n.copied-popup[data-v-00564ae5] {\r\n  position: fixed;\r\n  left: 50%;\r\n  transform: translate(-50%, -50%);\r\n  background-color: var(--theme--primary);\r\n  color: var(--foreground-inverted);\r\n  font-size: var(--v-button-font-size, 16px);\r\n  font-weight: var(--v-button-font-weight, 600);\r\n  padding: 10px 20px;\r\n  border-radius: var(--theme--border-radius);\r\n  z-index: 9999;\n}\n.fade-enter-active[data-v-00564ae5],\r\n.fade-leave-active[data-v-00564ae5] {\r\n  transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-00564ae5],\r\n.fade-leave-to[data-v-00564ae5] {\r\n  opacity: 0;\n}\r\n";
+var css = "\n.page-body[data-v-4ef49fdb] {\r\n    padding: 20px;\r\n    background-color: var(--theme--background);\r\n    border-radius: 8px;\r\n    margin-bottom: 20px;\n}\n.form-group[data-v-4ef49fdb] {\r\n    margin-bottom: 15px;\r\n\tpadding: 10px;\n}\n.form-group label[data-v-4ef49fdb] {\r\n    display: block;\r\n    margin-bottom: 5px;\r\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-4ef49fdb] {\r\n    width: 100%;\r\n    padding: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n\tbackground-color: var(--theme--background);\n}\n.btn[data-v-4ef49fdb] {\r\n\t\r\n\r\n    display: inline-block;\r\n    padding: 10px 20px;\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    text-align: center;\r\n    cursor: pointer;\r\n    border-radius: 4px;\r\n\tbackground-color: var(--theme--primary);\r\n\tcolor: var(--foreground-inverted);\r\n    border: none;\r\n\tmargin: 10px;\n}\n.btn[data-v-4ef49fdb]:hover {\r\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-4ef49fdb] {\r\n\tfloat: right;\n}\n.wrapped-pre[data-v-4ef49fdb] {\r\n    white-space: pre-wrap;\r\n    word-wrap: break-word;\r\n    overflow-wrap: break-word;\r\n    max-width: 100%;\r\n    background-color: #0d1117;\r\n    padding: 10px;\r\n    border-radius: 4px;\r\n    margin-top: 20px;\n}\n.pre-container[data-v-4ef49fdb] {\r\n\tmargin-left: 10px;\r\n\tmargin-right: 10px;\r\n\tborder: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n\tborder-radius: var(--theme--border-radius);\r\n    position: relative;\r\n\tmargin-bottom: 20px;\n}\n.btn-copy[data-v-4ef49fdb] {\r\n    position: absolute;\r\n    right: 0px;\r\n    background-color: #21262e;\r\n    color: white;\r\n    border: none;\r\n    padding: 5px 10px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\n}\n.btn-copy[data-v-4ef49fdb]:hover {\r\n    background-color: #30363d;\n}\n.copied-popup[data-v-4ef49fdb] {\r\n  position: fixed;\r\n  left: 50%;\r\n  transform: translate(-50%, -50%);\r\n  background-color: var(--theme--primary);\r\n  color: var(--foreground-inverted);\r\n  font-size: var(--v-button-font-size, 16px);\r\n  font-weight: var(--v-button-font-weight, 600);\r\n  padding: 10px 20px;\r\n  border-radius: var(--theme--border-radius);\r\n  z-index: 9999;\n}\n.fade-enter-active[data-v-4ef49fdb],\r\n.fade-leave-active[data-v-4ef49fdb] {\r\n  transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-4ef49fdb],\r\n.fade-leave-to[data-v-4ef49fdb] {\r\n  opacity: 0;\n}\r\n";
 n(css,{});
 
 const _sfc_main = {
@@ -466,7 +451,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       : undefined
   ]), 1032 /* PROPS, DYNAMIC_SLOTS */, ["title"]))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-00564ae5"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-4ef49fdb"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',
