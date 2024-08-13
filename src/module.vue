@@ -133,10 +133,9 @@ export default {
 							pageID = item.id;
 						});
 						searchParams.forEach((value, key) => {
-							console.log(key + " " + value);
-							//if (optionsSet.has(key)) {
-							//	formData.value[key] = value;
-							//};
+							if (optionsSet.has(key)) {
+								formData.value[key] = value;
+							};
 						});
 					} else {
 						page_title.value = "404: Not Found";
