@@ -64,6 +64,7 @@ export default {
 		const page_body = ref('');
 		const formData = ref({});
 		const searchParams = new URLSearchParams(window.location.search);
+		//const searchHrefArray = window.location.href.split('/'); // This splits it up into components (and does not include params). use here or in endpoint?
 		let pageID = "";
 		let rawRequest = "";
 		let optionsSet = new Set();
