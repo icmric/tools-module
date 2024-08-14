@@ -64,7 +64,6 @@ export default {
 		const page_body = ref('');
 		const formData = ref({});
 		const searchParams = new URLSearchParams(window.location.search);
-		//const searchHrefArray = window.location.href.split('/'); // This splits it up into components (and does not include params). use here or in endpoint?
 		let pageID = "";
 		let rawRequest = "";
 		let optionsSet = new Set();
@@ -85,17 +84,19 @@ export default {
 
 		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, showCopiedPopup, submitForm, debugButton, showInNewTab, copyToClipboard, openResource, };
 
-		function recursiveFind(obj) {
+		function recursiveFind(obj, prepend = "") {
 			let keys = Object.keys(obj);
 			for (let i = 0; i < keys.length; i++) {
 				if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
-					recursiveFind(obj[keys[i]]);	
+					console.log("Recursing with: " + JSON.stringify(obj[keys[i]]));
+					recursiveFind(obj[keys[i]], prepend);	
 				} else {
+					console.log("Attempting to add " + obj[keys[i]] + " With prepend: " + prepend);
 					let parseResult = parse_placeholders(obj[keys[i]]);
 					if (parseResult != null) {
 						if (allowUserInput(parseResult[0])) {
-							optionsSet.add(parseResult[0]);
-							formData.value[parseResult[0]] == null ? formData.value[parseResult[0]] = parseResult[1] : null;
+							optionsSet.add(`${prepend}${parseResult[0]}`);
+							formData.value[prepend + parseResult[0]] == null ? formData.value[prepend + parseResult[0]] = parseResult[1] : null;
 						}
 					}
 				}
@@ -123,7 +124,7 @@ export default {
 				page_title.value = 'Tools';
 				page_body.value = 'Please select a tool on the left to get started!';
 			} else {
-				api.get(`/items/resources?fields=*,retrieves.*&filter[title][_eq]=${page}`).then((rsp) => {
+				api.get(`/items/resources?fields=*,retrieves.*,other_resources.*.*.*&filter[title][_eq]=${page}`).then((rsp) => {
 					if (rsp.data.data) {
 						rsp.data.data.forEach(item => {
 							rawPageName = item.title;
@@ -132,12 +133,22 @@ export default {
 							rawRequest = item.main;
 							recursiveFind(rsp.data.data[0]);
 							pageID = item.id;
-						});
+							item.other_resources.forEach(resource => {
+								console.log(resource.item);
+								// This adds them to the the optionsSet, but they wont be used when sending (or may be sent all to one)
+								// Update optionsSet to an array or object of sets, incremnting on each linked resource
+								// Will make it easier to determine where to send the data
+								// Add way to call each one in order, waiting on response of last one (find way to show error if one fails)
+								// also need to share data between them
+								// find way to show them in directus when creating item - create placeholders for that specific situation??
+								recursiveFind(resource.item, resource.item.title + ": ");
+							});
 						searchParams.forEach((value, key) => {
 							if (optionsSet.has(key)) {
 								formData.value[key] = value;
 							};
 						});
+					});
 					} else {
 						page_title.value = "404: Not Found";
 					}
