@@ -114,7 +114,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-f6d025b0] {\r\n    padding: 20px;\r\n    background-color: var(--theme--background);\r\n    border-radius: 8px;\r\n    margin-bottom: 20px;\n}\n.form-group[data-v-f6d025b0] {\r\n    margin-bottom: 15px;\r\n\tpadding: 10px;\n}\n.form-group label[data-v-f6d025b0] {\r\n    display: block;\r\n    margin-bottom: 5px;\r\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-f6d025b0] {\r\n    width: 100%;\r\n    padding: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n\tbackground-color: var(--theme--background);\n}\n.btn[data-v-f6d025b0] {\r\n\t\r\n\r\n    display: inline-block;\r\n    padding: 10px 20px;\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    text-align: center;\r\n    cursor: pointer;\r\n    border-radius: 4px;\r\n\tbackground-color: var(--theme--primary);\r\n\tcolor: var(--foreground-inverted);\r\n    border: none;\r\n\tmargin: 10px;\n}\n.btn[data-v-f6d025b0]:hover {\r\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-f6d025b0] {\r\n\tfloat: right;\n}\n.wrapped-pre[data-v-f6d025b0] {\r\n    white-space: pre-wrap;\r\n    word-wrap: break-word;\r\n    overflow-wrap: break-word;\r\n    max-width: 100%;\r\n    background-color: #0d1117;\r\n    padding: 10px;\r\n    border-radius: 4px;\r\n    margin-top: 20px;\n}\n.pre-container[data-v-f6d025b0] {\r\n\tmargin-left: 10px;\r\n\tmargin-right: 10px;\r\n\tborder: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n\tborder-radius: var(--theme--border-radius);\r\n    position: relative;\r\n\tmargin-bottom: 20px;\n}\n.btn-copy[data-v-f6d025b0] {\r\n    position: absolute;\r\n    right: 0px;\r\n    background-color: #21262e;\r\n    color: white;\r\n    border: none;\r\n    padding: 5px 10px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\n}\n.btn-copy[data-v-f6d025b0]:hover {\r\n    background-color: #30363d;\n}\n.copied-popup[data-v-f6d025b0] {\r\n  position: fixed;\r\n  left: 50%;\r\n  transform: translate(-50%, -50%);\r\n  background-color: var(--theme--primary);\r\n  color: var(--foreground-inverted);\r\n  font-size: var(--v-button-font-size, 16px);\r\n  font-weight: var(--v-button-font-weight, 600);\r\n  padding: 10px 20px;\r\n  border-radius: var(--theme--border-radius);\r\n  z-index: 9999;\n}\n.fade-enter-active[data-v-f6d025b0],\r\n.fade-leave-active[data-v-f6d025b0] {\r\n  transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-f6d025b0],\r\n.fade-leave-to[data-v-f6d025b0] {\r\n  opacity: 0;\n}\r\n";
+var css = "\n.page-body[data-v-b7d2a8e2] {\r\n    padding: 20px;\r\n    background-color: var(--theme--background);\r\n    border-radius: 8px;\r\n    margin-bottom: 20px;\n}\n.form-group[data-v-b7d2a8e2] {\r\n    margin-bottom: 15px;\r\n\tpadding: 10px;\n}\n.form-group label[data-v-b7d2a8e2] {\r\n    display: block;\r\n    margin-bottom: 5px;\r\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-b7d2a8e2] {\r\n    width: 100%;\r\n    padding: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n\tbackground-color: var(--theme--background);\n}\n.btn[data-v-b7d2a8e2] {\r\n\t\r\n\r\n    display: inline-block;\r\n    padding: 10px 20px;\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    text-align: center;\r\n    cursor: pointer;\r\n    border-radius: 4px;\r\n\tbackground-color: var(--theme--primary);\r\n\tcolor: var(--foreground-inverted);\r\n    border: none;\r\n\tmargin: 10px;\n}\n.btn[data-v-b7d2a8e2]:hover {\r\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-b7d2a8e2] {\r\n\tfloat: right;\n}\n.wrapped-pre[data-v-b7d2a8e2] {\r\n    white-space: pre-wrap;\r\n    word-wrap: break-word;\r\n    overflow-wrap: break-word;\r\n    max-width: 100%;\r\n    background-color: #0d1117;\r\n    padding: 10px;\r\n    border-radius: 4px;\r\n    margin-top: 20px;\n}\n.pre-container[data-v-b7d2a8e2] {\r\n\tmargin-left: 10px;\r\n\tmargin-right: 10px;\r\n\tborder: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n\tborder-radius: var(--theme--border-radius);\r\n    position: relative;\r\n\tmargin-bottom: 20px;\n}\n.btn-copy[data-v-b7d2a8e2] {\r\n    position: absolute;\r\n    right: 0px;\r\n    background-color: #21262e;\r\n    color: white;\r\n    border: none;\r\n    padding: 5px 10px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\n}\n.btn-copy[data-v-b7d2a8e2]:hover {\r\n    background-color: #30363d;\n}\n.copied-popup[data-v-b7d2a8e2] {\r\n  position: fixed;\r\n  left: 50%;\r\n  transform: translate(-50%, -50%);\r\n  background-color: var(--theme--primary);\r\n  color: var(--foreground-inverted);\r\n  font-size: var(--v-button-font-size, 16px);\r\n  font-weight: var(--v-button-font-weight, 600);\r\n  padding: 10px 20px;\r\n  border-radius: var(--theme--border-radius);\r\n  z-index: 9999;\n}\n.fade-enter-active[data-v-b7d2a8e2],\r\n.fade-leave-active[data-v-b7d2a8e2] {\r\n  transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-b7d2a8e2],\r\n.fade-leave-to[data-v-b7d2a8e2] {\r\n  opacity: 0;\n}\r\n";
 n(css,{});
 
 const _sfc_main = {
@@ -157,7 +157,6 @@ const _sfc_main = {
 			() => props.page,
 			async () => {
 				render_page(props.page);
-				console.log(optionsSet);
 			}
 		);
 
@@ -194,7 +193,6 @@ const _sfc_main = {
 
 		async function render_page(page) {
 			// Reset form fields and form data
-			console.log("Resetting form data with: " + optionsSet[0].size);
 			formData.value = {};
 			optionsSet.length = 0;
 			optionsSet.push(new Set([]));
@@ -301,6 +299,7 @@ const _sfc_main = {
 		}
 
 		function submitForm() {
+			console.log(optionsSet);
 			rspJsonStr.value = "...";
 			makeApiRequest();
 		}
@@ -478,7 +477,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       : undefined
   ]), 1032 /* PROPS, DYNAMIC_SLOTS */, ["title"]))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-f6d025b0"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-b7d2a8e2"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',

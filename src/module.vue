@@ -81,7 +81,6 @@ export default {
 			() => props.page,
 			async () => {
 				render_page(props.page);
-				console.log(optionsSet);
 			}
 		);
 
@@ -118,7 +117,6 @@ export default {
 
 		async function render_page(page) {
 			// Reset form fields and form data
-			console.log("Resetting form data with: " + optionsSet[0].size);
 			formData.value = {};
 			optionsSet.length = 0;
 			optionsSet.push(new Set([]));
@@ -226,6 +224,7 @@ export default {
 		}
 
 		function submitForm() {
+			console.log(optionsSet);
 			rspJsonStr.value = "...";
 			makeApiRequest();
 		}
