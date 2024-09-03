@@ -98,7 +98,7 @@ export default {
 					let parseResult = parse_placeholders(obj[keys[i]]);
 					if (parseResult != null) {
 						if (allowUserInput(parseResult[0])) {
-							optionsSet[0].add(`${prepend}${parseResult[0]}`);
+							optionsSet[optionsSet.length - 1].add(`${prepend}${parseResult[0]}`);
 							formData.value[prepend + parseResult[0]] == null ? formData.value[prepend + parseResult[0]] = parseResult[1] : null;
 						}
 					}
@@ -146,6 +146,7 @@ export default {
 								// Add way to call each one in order, waiting on response of last one (find way to show error if one fails)
 								// also need to share data between them
 								// find way to show them in directus when creating item - create placeholders for that specific situation??
+								optionsSet.push(new Set([]));
 								recursiveFind(resource.item, resource.item.title + ": ");
 							});
 						searchParams.forEach((value, key) => {
