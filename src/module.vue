@@ -16,9 +16,11 @@
         <div v-if="page_body" v-html="page_body" class="page-body"></div>
 
         <div v-for="origin in optionsSet" :key="origin" class="form-group">
-            <label :for="origin">{{ origin }}</label>
-            <textarea v-model="formData[origin]" :id="origin" class="form-control"></textarea>
-        </div>
+			<div v-for="option in origin" :key="option" class="form-group">
+				<label :for="option">{{ option }}</label>
+				<textarea v-model="formData[option]" :id="option" class="form-control"></textarea>
+			</div>
+		</div>
         
         <button v-if="!isHomePage" @click="submitForm" class="btn btn-primary">Submit</button>
 
@@ -66,7 +68,7 @@ export default {
 		const searchParams = new URLSearchParams(window.location.search);
 		let pageID = "";
 		let rawRequest = "";
-		let optionsSet = new Set();
+		let optionsSet = [new Set([1])];
 		let rspJsonStr = ref("");
 		let rawPageName = "";
 		let bypassTransform = false;
@@ -79,6 +81,7 @@ export default {
 			() => props.page,
 			async () => {
 				render_page(props.page);
+				console.log(optionsSet);
 			}
 		);
 
@@ -88,14 +91,14 @@ export default {
 			let keys = Object.keys(obj);
 			for (let i = 0; i < keys.length; i++) {
 				if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
-					console.log("Recursing with: " + JSON.stringify(obj[keys[i]]));
+					//console.log("Recursing with: " + JSON.stringify(obj[keys[i]]));
 					recursiveFind(obj[keys[i]], prepend);	
 				} else {
-					console.log("Attempting to add " + obj[keys[i]] + " With prepend: " + prepend);
+					//console.log("Attempting to add " + obj[keys[i]] + " With prepend: " + prepend);
 					let parseResult = parse_placeholders(obj[keys[i]]);
 					if (parseResult != null) {
 						if (allowUserInput(parseResult[0])) {
-							optionsSet.add(`${prepend}${parseResult[0]}`);
+							optionsSet[0].add(`${prepend}${parseResult[0]}`);
 							formData.value[prepend + parseResult[0]] == null ? formData.value[prepend + parseResult[0]] = parseResult[1] : null;
 						}
 					}
@@ -115,8 +118,10 @@ export default {
 
 		async function render_page(page) {
 			// Reset form fields and form data
+			console.log("Resetting form data with: " + optionsSet[0].size);
 			formData.value = {};
-			optionsSet.clear();
+			optionsSet.length = 0;
+			optionsSet.push(new Set([]));
 			rspJsonStr.value = "";
 			rawPageName = "";
 
@@ -124,7 +129,7 @@ export default {
 				page_title.value = 'Tools';
 				page_body.value = 'Please select a tool on the left to get started!';
 			} else {
-				api.get(`/items/resources?fields=*,retrieves.*,other_resources.*.*.*&filter[title][_eq]=${page}`).then((rsp) => {
+				await api.get(`/items/resources?fields=*,retrieves.*,other_resources.*.*.*&filter[title][_eq]=${page}`).then((rsp) => {
 					if (rsp.data.data) {
 						rsp.data.data.forEach(item => {
 							rawPageName = item.title;
@@ -144,7 +149,7 @@ export default {
 								recursiveFind(resource.item, resource.item.title + ": ");
 							});
 						searchParams.forEach((value, key) => {
-							if (optionsSet.has(key)) {
+							if (optionsSet[0].has(key)) {
 								formData.value[key] = value;
 							};
 						});
