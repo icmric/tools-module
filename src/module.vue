@@ -15,10 +15,10 @@
         <router-view name="tools-module" :page="page" />
         <div v-if="page_body" v-html="page_body" class="page-body"></div>
 
-        <div v-for="origin in optionsSet" :key="origin" class="form-group">
+        <div v-for="(origin, i) in optionsSet" :key="origin" class="form-group">
 			<div v-for="option in origin" :key="option" class="form-group">
 				<label :for="option">{{ option }}</label>
-				<textarea v-model="formData[option]" :id="option" class="form-control"></textarea>
+				<textarea v-model="formData[i + option]" :id="option" class="form-control"></textarea>
 			</div>
 		</div>
         
@@ -73,6 +73,7 @@ export default {
 		let rawPageName = "";
 		let bypassTransform = false;
 		let showCopiedPopup = ref(false);
+		let formattedApiQuerys = [];
 		
 		render_page(props.page);
 		fetch_all_pages();
@@ -86,7 +87,7 @@ export default {
 
 		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, showCopiedPopup, submitForm, debugButton, showInNewTab, copyToClipboard, openResource, };
 
-		function recursiveFind(obj, prepend = "") {
+		function recursiveFind(obj, prepend = "", index = 0) {
 			let keys = Object.keys(obj);
 			for (let i = 0; i < keys.length; i++) {
 				if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
@@ -98,7 +99,7 @@ export default {
 					if (parseResult != null) {
 						if (allowUserInput(parseResult[0])) {
 							optionsSet[optionsSet.length - 1].add(`${prepend}${parseResult[0]}`);
-							formData.value[prepend + parseResult[0]] == null ? formData.value[prepend + parseResult[0]] = parseResult[1] : null;
+							formData.value[index + prepend + parseResult[0]] == null ? formData.value[index + prepend + parseResult[0]] = parseResult[1] : null;
 						}
 					}
 				}
@@ -136,8 +137,7 @@ export default {
 							rawRequest = item.main;
 							recursiveFind(rsp.data.data[0]);
 							pageID = item.id;
-							item.other_resources.forEach(resource => {
-								console.log(resource.item);
+							item.other_resources.forEach((resource, index) => {
 								// This adds them to the the optionsSet, but they wont be used when sending (or may be sent all to one)
 								// Update optionsSet to an array or object of sets, incremnting on each linked resource
 								// Will make it easier to determine where to send the data
@@ -145,11 +145,11 @@ export default {
 								// also need to share data between them
 								// find way to show them in directus when creating item - create placeholders for that specific situation??
 								optionsSet.push(new Set([]));
-								recursiveFind(resource.item, resource.item.title + ": ");
+								recursiveFind(resource.item, resource.item.title + ": ", index + 1);
 							});
 						searchParams.forEach((value, key) => {
 							if (optionsSet[0].has(key)) {
-								formData.value[key] = value;
+								formData.value[0+key] = value;// dodgy fix, only puts in search params for first resource, not any chained ones
 							};
 						});
 					});
@@ -209,6 +209,14 @@ export default {
 		}
 
 		async function makeApiRequest() {
+			for (const term in formData.value) {
+				const groupNum = term.at(0);
+				if (formattedApiQuerys[groupNum] == null) {
+					formattedApiQuerys[groupNum] = [];
+				}
+				formattedApiQuerys[groupNum].push(term.slice(1));
+				console.log(formattedApiQuerys);
+			}
 			let postReqData = {
 				"tool": rawPageName,
 				"body": formData.value,
@@ -224,7 +232,7 @@ export default {
 		}
 
 		function submitForm() {
-			console.log(optionsSet);
+			console.log(formData.value);
 			rspJsonStr.value = "...";
 			makeApiRequest();
 		}

@@ -114,7 +114,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-b7d2a8e2] {\r\n    padding: 20px;\r\n    background-color: var(--theme--background);\r\n    border-radius: 8px;\r\n    margin-bottom: 20px;\n}\n.form-group[data-v-b7d2a8e2] {\r\n    margin-bottom: 15px;\r\n\tpadding: 10px;\n}\n.form-group label[data-v-b7d2a8e2] {\r\n    display: block;\r\n    margin-bottom: 5px;\r\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-b7d2a8e2] {\r\n    width: 100%;\r\n    padding: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n\tbackground-color: var(--theme--background);\n}\n.btn[data-v-b7d2a8e2] {\r\n\t\r\n\r\n    display: inline-block;\r\n    padding: 10px 20px;\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    text-align: center;\r\n    cursor: pointer;\r\n    border-radius: 4px;\r\n\tbackground-color: var(--theme--primary);\r\n\tcolor: var(--foreground-inverted);\r\n    border: none;\r\n\tmargin: 10px;\n}\n.btn[data-v-b7d2a8e2]:hover {\r\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-b7d2a8e2] {\r\n\tfloat: right;\n}\n.wrapped-pre[data-v-b7d2a8e2] {\r\n    white-space: pre-wrap;\r\n    word-wrap: break-word;\r\n    overflow-wrap: break-word;\r\n    max-width: 100%;\r\n    background-color: #0d1117;\r\n    padding: 10px;\r\n    border-radius: 4px;\r\n    margin-top: 20px;\n}\n.pre-container[data-v-b7d2a8e2] {\r\n\tmargin-left: 10px;\r\n\tmargin-right: 10px;\r\n\tborder: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n\tborder-radius: var(--theme--border-radius);\r\n    position: relative;\r\n\tmargin-bottom: 20px;\n}\n.btn-copy[data-v-b7d2a8e2] {\r\n    position: absolute;\r\n    right: 0px;\r\n    background-color: #21262e;\r\n    color: white;\r\n    border: none;\r\n    padding: 5px 10px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\n}\n.btn-copy[data-v-b7d2a8e2]:hover {\r\n    background-color: #30363d;\n}\n.copied-popup[data-v-b7d2a8e2] {\r\n  position: fixed;\r\n  left: 50%;\r\n  transform: translate(-50%, -50%);\r\n  background-color: var(--theme--primary);\r\n  color: var(--foreground-inverted);\r\n  font-size: var(--v-button-font-size, 16px);\r\n  font-weight: var(--v-button-font-weight, 600);\r\n  padding: 10px 20px;\r\n  border-radius: var(--theme--border-radius);\r\n  z-index: 9999;\n}\n.fade-enter-active[data-v-b7d2a8e2],\r\n.fade-leave-active[data-v-b7d2a8e2] {\r\n  transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-b7d2a8e2],\r\n.fade-leave-to[data-v-b7d2a8e2] {\r\n  opacity: 0;\n}\r\n";
+var css = "\n.page-body[data-v-80a75661] {\r\n    padding: 20px;\r\n    background-color: var(--theme--background);\r\n    border-radius: 8px;\r\n    margin-bottom: 20px;\n}\n.form-group[data-v-80a75661] {\r\n    margin-bottom: 15px;\r\n\tpadding: 10px;\n}\n.form-group label[data-v-80a75661] {\r\n    display: block;\r\n    margin-bottom: 5px;\r\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-80a75661] {\r\n    width: 100%;\r\n    padding: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n\tbackground-color: var(--theme--background);\n}\n.btn[data-v-80a75661] {\r\n\t\r\n\r\n    display: inline-block;\r\n    padding: 10px 20px;\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    text-align: center;\r\n    cursor: pointer;\r\n    border-radius: 4px;\r\n\tbackground-color: var(--theme--primary);\r\n\tcolor: var(--foreground-inverted);\r\n    border: none;\r\n\tmargin: 10px;\n}\n.btn[data-v-80a75661]:hover {\r\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-80a75661] {\r\n\tfloat: right;\n}\n.wrapped-pre[data-v-80a75661] {\r\n    white-space: pre-wrap;\r\n    word-wrap: break-word;\r\n    overflow-wrap: break-word;\r\n    max-width: 100%;\r\n    background-color: #0d1117;\r\n    padding: 10px;\r\n    border-radius: 4px;\r\n    margin-top: 20px;\n}\n.pre-container[data-v-80a75661] {\r\n\tmargin-left: 10px;\r\n\tmargin-right: 10px;\r\n\tborder: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n\tborder-radius: var(--theme--border-radius);\r\n    position: relative;\r\n\tmargin-bottom: 20px;\n}\n.btn-copy[data-v-80a75661] {\r\n    position: absolute;\r\n    right: 0px;\r\n    background-color: #21262e;\r\n    color: white;\r\n    border: none;\r\n    padding: 5px 10px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\n}\n.btn-copy[data-v-80a75661]:hover {\r\n    background-color: #30363d;\n}\n.copied-popup[data-v-80a75661] {\r\n  position: fixed;\r\n  left: 50%;\r\n  transform: translate(-50%, -50%);\r\n  background-color: var(--theme--primary);\r\n  color: var(--foreground-inverted);\r\n  font-size: var(--v-button-font-size, 16px);\r\n  font-weight: var(--v-button-font-weight, 600);\r\n  padding: 10px 20px;\r\n  border-radius: var(--theme--border-radius);\r\n  z-index: 9999;\n}\n.fade-enter-active[data-v-80a75661],\r\n.fade-leave-active[data-v-80a75661] {\r\n  transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-80a75661],\r\n.fade-leave-to[data-v-80a75661] {\r\n  opacity: 0;\n}\r\n";
 n(css,{});
 
 const _sfc_main = {
@@ -149,6 +149,7 @@ const _sfc_main = {
 		let rawPageName = "";
 		let bypassTransform = false;
 		let showCopiedPopup = ref(false);
+		let formattedApiQuerys = [];
 		
 		render_page(props.page);
 		fetch_all_pages();
@@ -162,7 +163,7 @@ const _sfc_main = {
 
 		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, showCopiedPopup, submitForm, debugButton, showInNewTab, copyToClipboard, openResource, };
 
-		function recursiveFind(obj, prepend = "") {
+		function recursiveFind(obj, prepend = "", index = 0) {
 			let keys = Object.keys(obj);
 			for (let i = 0; i < keys.length; i++) {
 				if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
@@ -174,7 +175,7 @@ const _sfc_main = {
 					if (parseResult != null) {
 						if (allowUserInput(parseResult[0])) {
 							optionsSet[optionsSet.length - 1].add(`${prepend}${parseResult[0]}`);
-							formData.value[prepend + parseResult[0]] == null ? formData.value[prepend + parseResult[0]] = parseResult[1] : null;
+							formData.value[index + prepend + parseResult[0]] == null ? formData.value[index + prepend + parseResult[0]] = parseResult[1] : null;
 						}
 					}
 				}
@@ -212,8 +213,7 @@ const _sfc_main = {
 							rawRequest = item.main;
 							recursiveFind(rsp.data.data[0]);
 							pageID = item.id;
-							item.other_resources.forEach(resource => {
-								console.log(resource.item);
+							item.other_resources.forEach((resource, index) => {
 								// This adds them to the the optionsSet, but they wont be used when sending (or may be sent all to one)
 								// Update optionsSet to an array or object of sets, incremnting on each linked resource
 								// Will make it easier to determine where to send the data
@@ -221,11 +221,11 @@ const _sfc_main = {
 								// also need to share data between them
 								// find way to show them in directus when creating item - create placeholders for that specific situation??
 								optionsSet.push(new Set([]));
-								recursiveFind(resource.item, resource.item.title + ": ");
+								recursiveFind(resource.item, resource.item.title + ": ", index + 1);
 							});
 						searchParams.forEach((value, key) => {
 							if (optionsSet[0].has(key)) {
-								formData.value[key] = value;
+								formData.value[0+key] = value;// dodgy fix, only puts in search params for first resource, not any chained ones
 							}						});
 					});
 					} else {
@@ -284,6 +284,14 @@ const _sfc_main = {
 		}
 
 		async function makeApiRequest() {
+			for (const term in formData.value) {
+				const groupNum = term.at(0);
+				if (formattedApiQuerys[groupNum] == null) {
+					formattedApiQuerys[groupNum] = [];
+				}
+				formattedApiQuerys[groupNum].push(term.slice(1));
+				console.log(formattedApiQuerys);
+			}
 			let postReqData = {
 				"tool": rawPageName,
 				"body": formData.value,
@@ -299,7 +307,7 @@ const _sfc_main = {
 		}
 
 		function submitForm() {
-			console.log(optionsSet);
+			console.log(formData.value);
 			rspJsonStr.value = "...";
 			makeApiRequest();
 		}
@@ -406,7 +414,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
             class: "page-body"
           }, null, 8 /* PROPS */, _hoisted_2))
         : createCommentVNode("v-if", true),
-      (openBlock(true), createElementBlock(Fragment, null, renderList($setup.optionsSet, (origin) => {
+      (openBlock(true), createElementBlock(Fragment, null, renderList($setup.optionsSet, (origin, i) => {
         return (openBlock(), createElementBlock("div", {
           key: origin,
           class: "form-group"
@@ -418,11 +426,11 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
             }, [
               createElementVNode("label", { for: option }, toDisplayString(option), 9 /* TEXT, PROPS */, _hoisted_3),
               withDirectives(createElementVNode("textarea", {
-                "onUpdate:modelValue": $event => (($setup.formData[option]) = $event),
+                "onUpdate:modelValue": $event => (($setup.formData[i + option]) = $event),
                 id: option,
                 class: "form-control"
               }, null, 8 /* PROPS */, _hoisted_4), [
-                [vModelText, $setup.formData[option]]
+                [vModelText, $setup.formData[i + option]]
               ])
             ]))
           }), 128 /* KEYED_FRAGMENT */))
@@ -477,7 +485,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       : undefined
   ]), 1032 /* PROPS, DYNAMIC_SLOTS */, ["title"]))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-b7d2a8e2"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-80a75661"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',
