@@ -79,12 +79,13 @@ export default {
         const all_pages = ref([]);
         const page_title = ref('');
         const page_body = ref('');
-        const formData = ref([]); // Changed to array instead of object
+        const formData = ref([]);
         const searchParams = new URLSearchParams(window.location.search);
         const rspJsonStr = ref("");
         const showCopiedPopup = ref(false);
         const optionsSet = ref([new Set([])]);
         const formHeadings = ref([]);
+        const prevResponses = ref([]);
 
         // Internal state variables
         let pageID = "";
@@ -106,7 +107,7 @@ export default {
         return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, showCopiedPopup, formHeadings, submitForm, debugButton, showInNewTab, copyToClipboard, openResource, };
 
         // Recursively find form fields in the data structure
-        function recursiveFind(obj, prepend = "", index = 0) {
+        function recursiveFind(obj, prepend = "", index = 0, ignoredKeys = ["other_resources"]) {
             if (!formData.value[index]) {
                 formData.value[index] = {};
             }
@@ -116,6 +117,10 @@ export default {
 
             let keys = Object.keys(obj);
             for (let i = 0; i < keys.length; i++) {
+                // Skip the key if it's in the ignoredKeys list
+                if (ignoredKeys.includes(keys[i])) {
+                    continue;
+                }
                 if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
                     recursiveFind(obj[keys[i]], prepend, index);
                 } else {
@@ -129,7 +134,7 @@ export default {
         }
 
         function allowUserInput(objToCheck) {
-            let valuesToCheck = ["reqAccountability", "$tool", "apiResponse"];
+            let valuesToCheck = ["reqAccountability", "$tool", "prevApiRsp", "apiResponse"];
             for (let i = 0; i < valuesToCheck.length; i++) {
                 if (objToCheck.includes(valuesToCheck[i])) {
                     return false;
@@ -140,12 +145,7 @@ export default {
 
         // Render page content and setup form
         async function render_page(page) {
-            // Reset form state
-            formData.value = [{}];
-            optionsSet.value = [new Set([])]; // Use .value to modify ref
-            rspJsonStr.value = "";
-            rawPageName = "";
-
+            clearValues()
             if (page === 'home') {
                 page_title.value = 'Tools';
                 page_body.value = 'Please select a tool on the left to get started!';
@@ -163,10 +163,10 @@ export default {
 
                             // Handle linked resources
                             item.other_resources.forEach((resource, index) => {
-                                optionsSet.value[index + 1] = new Set([]); // Use .value
+                                optionsSet.value[index + 1] = new Set([]);
                                 formData.value[index + 1] = {};
                                 formHeadings.value[index + 1] = resource.item.title;
-                                let result = recursiveFind(resource.item, `${index + 1}: `, index + 1);
+                                recursiveFind(resource.item, '', index + 1);
                             });
 
                             // Handle URL parameters
@@ -177,8 +177,6 @@ export default {
                             });
                         });
                     }
-                    console.log(formHeadings.value);
-                    //console.log(optionsSet.value[1]);
                 } catch (error) {
                     console.error(error);
                     page_title.value = "404: Not Found";
@@ -232,33 +230,62 @@ export default {
             }
         }
 
-        async function makeApiRequest() {
-            for (const term in formData.value) {
+        function clearValues() {
+            // Reset form state
+            formData.value = [{}];
+            optionsSet.value = [new Set([])];
+            rspJsonStr.value = "";
+            rawPageName = "";
+            prevResponses.value = [];
+        }
+
+        async function manageApiRequests() {
+            // Reset previous responses so they dont stack up if multiple requests are made without refreshing the page
+            prevResponses.value = [];
+            // This makes it so the final chained resource is shown as the final response and the others are in order in previous responses
+            // Not entirley sure how to fix, maybe add a check to see if there are multiple requests, and if so start from the seccond one and itterate through
+            // then come back and do the first one? 
+            for (const group in formData.value) {
+                var index = parseInt(group);
+                var apiHeading = formHeadings.value[index] || rawPageName;
+                await makeApiRequest(formData.value[index], index == formData.value.length - 1, apiHeading);
+            };
+        }
+
+        async function makeApiRequest(apiReqBody, finalReq, apiHeading) {
+            // I dont think this is actually used anywhere???
+            for (const term in apiReqBody) {
                 const groupNum = term.at(0);
                 if (formattedApiQuerys[groupNum] == null) {
                     formattedApiQuerys[groupNum] = [];
                 }
                 formattedApiQuerys[groupNum].push(term.slice(1));
-                //console.log(formattedApiQuerys);
+            }
+            let finalPrevRsp;
+            if (finalReq) {
+                finalPrevRsp = prevResponses.value;
             }
             let postReqData = {
-                "tool": rawPageName,
-                "body": formData.value,
+                "tool": apiHeading,
+                "body": apiReqBody,
                 "bypassTransform": bypassTransform,
+                "prevApiRsp": finalPrevRsp,
             };
 
-            await api.post(buildApiUrl(), postReqData).then((rsp) => {
+            await api.post(buildApiUrl(false, apiReqBody.title), postReqData).then((rsp) => {
                 let jsonRsp = rsp.data;
-                rspJsonStr.value = jsonRsp;
+                if (finalReq) {
+                    rspJsonStr.value = jsonRsp;
+                }
+                prevResponses.value.push(jsonRsp);
             }).catch((error) => {
                 console.log(error);
             });
         }
 
         function submitForm() {
-            console.log(formData.value);
             rspJsonStr.value = "...";
-            makeApiRequest();
+            manageApiRequests(true);
         }
 
         async function debugButton() {
@@ -281,11 +308,43 @@ export default {
         }
 
         async function showInNewTab() {
-            window.open(buildApiUrl(true));
+            await manageApiRequests();
+
+            // Create a new window
+            const newWindow = window.open('', '_blank');
+
+            // Ensure the new window is not null (in case of popup blockers)
+            if (newWindow) {
+                // Use JSON.stringify with formatting for readability
+                const formattedJson = JSON.stringify(rspJsonStr.value, null, 2);
+
+                // Write a formatted HTML page to display the JSON
+                newWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>JSON Response</title>
+                <style>
+                    body { 
+                        font-family: monospace; 
+                        white-space: pre; 
+                        background-color: #f4f4f4;
+                        padding: 20px;
+                    }
+                </style>
+            </head>
+            <body>${formattedJson}</body>
+            </html>
+        `);
+            } else {
+                // Handle popup blocker
+                alert('Popup blocked. Please allow popups for this site.');
+            }
         }
 
-        function buildApiUrl(getRequest = false) {
-            let url = '/tools/' + rawPageName;
+        function buildApiUrl(getRequest = false, pageName) {
+            let urlDestination = pageName || rawPageName;
+            let url = '/tools/' + urlDestination;
 
             if (getRequest) {
                 // only used for GET requests
@@ -305,7 +364,6 @@ export default {
         }
 
         function openResource() {
-            //console.log(pageID);
 
             try {
                 window.open("/admin/content/resources/" + pageID);

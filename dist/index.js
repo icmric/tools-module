@@ -114,7 +114,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-d269280a] {\r\n    padding: 20px;\r\n    background-color: var(--theme--background);\r\n    border-radius: 8px;\r\n    margin-bottom: 20px;\n}\n.form-group[data-v-d269280a] {\r\n    margin-bottom: 15px;\r\n    padding: 10px;\n}\n.form-group label[data-v-d269280a] {\r\n    display: block;\r\n    margin-bottom: 5px;\r\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-d269280a] {\r\n    width: 100%;\r\n    padding: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n    background-color: var(--theme--background);\n}\n.btn[data-v-d269280a] {\r\n\r\n\r\n    display: inline-block;\r\n    padding: 10px 20px;\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    text-align: center;\r\n    cursor: pointer;\r\n    border-radius: 4px;\r\n    background-color: var(--theme--primary);\r\n    color: var(--foreground-inverted);\r\n    border: none;\r\n    margin: 10px;\n}\n.btn[data-v-d269280a]:hover {\r\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-d269280a] {\r\n    float: right;\n}\n.wrapped-pre[data-v-d269280a] {\r\n    white-space: pre-wrap;\r\n    word-wrap: break-word;\r\n    overflow-wrap: break-word;\r\n    max-width: 100%;\r\n    background-color: #0d1117;\r\n    padding: 10px;\r\n    border-radius: 4px;\r\n    margin-top: 20px;\n}\n.pre-container[data-v-d269280a] {\r\n    margin-left: 10px;\r\n    margin-right: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n    position: relative;\r\n    margin-bottom: 20px;\n}\n.btn-copy[data-v-d269280a] {\r\n    position: absolute;\r\n    right: 0px;\r\n    background-color: #21262e;\r\n    color: white;\r\n    border: none;\r\n    padding: 5px 10px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\n}\n.btn-copy[data-v-d269280a]:hover {\r\n    background-color: #30363d;\n}\n.copied-popup[data-v-d269280a] {\r\n    position: fixed;\r\n    left: 50%;\r\n    transform: translate(-50%, -50%);\r\n    background-color: var(--theme--primary);\r\n    color: var(--foreground-inverted);\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    padding: 10px 20px;\r\n    border-radius: var(--theme--border-radius);\r\n    z-index: 9999;\n}\n.fade-enter-active[data-v-d269280a],\r\n.fade-leave-active[data-v-d269280a] {\r\n    transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-d269280a],\r\n.fade-leave-to[data-v-d269280a] {\r\n    opacity: 0;\n}\r\n";
+var css = "\n.page-body[data-v-9d9103b6] {\r\n    padding: 20px;\r\n    background-color: var(--theme--background);\r\n    border-radius: 8px;\r\n    margin-bottom: 20px;\n}\n.form-group[data-v-9d9103b6] {\r\n    margin-bottom: 15px;\r\n    padding: 10px;\n}\n.form-group label[data-v-9d9103b6] {\r\n    display: block;\r\n    margin-bottom: 5px;\r\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-9d9103b6] {\r\n    width: 100%;\r\n    padding: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n    background-color: var(--theme--background);\n}\n.btn[data-v-9d9103b6] {\r\n\r\n\r\n    display: inline-block;\r\n    padding: 10px 20px;\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    text-align: center;\r\n    cursor: pointer;\r\n    border-radius: 4px;\r\n    background-color: var(--theme--primary);\r\n    color: var(--foreground-inverted);\r\n    border: none;\r\n    margin: 10px;\n}\n.btn[data-v-9d9103b6]:hover {\r\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-9d9103b6] {\r\n    float: right;\n}\n.wrapped-pre[data-v-9d9103b6] {\r\n    white-space: pre-wrap;\r\n    word-wrap: break-word;\r\n    overflow-wrap: break-word;\r\n    max-width: 100%;\r\n    background-color: #0d1117;\r\n    padding: 10px;\r\n    border-radius: 4px;\r\n    margin-top: 20px;\n}\n.pre-container[data-v-9d9103b6] {\r\n    margin-left: 10px;\r\n    margin-right: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n    position: relative;\r\n    margin-bottom: 20px;\n}\n.btn-copy[data-v-9d9103b6] {\r\n    position: absolute;\r\n    right: 0px;\r\n    background-color: #21262e;\r\n    color: white;\r\n    border: none;\r\n    padding: 5px 10px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\n}\n.btn-copy[data-v-9d9103b6]:hover {\r\n    background-color: #30363d;\n}\n.copied-popup[data-v-9d9103b6] {\r\n    position: fixed;\r\n    left: 50%;\r\n    transform: translate(-50%, -50%);\r\n    background-color: var(--theme--primary);\r\n    color: var(--foreground-inverted);\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    padding: 10px 20px;\r\n    border-radius: var(--theme--border-radius);\r\n    z-index: 9999;\n}\n.fade-enter-active[data-v-9d9103b6],\r\n.fade-leave-active[data-v-9d9103b6] {\r\n    transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-9d9103b6],\r\n.fade-leave-to[data-v-9d9103b6] {\r\n    opacity: 0;\n}\r\n";
 n(css,{});
 
 const _sfc_main = {
@@ -141,12 +141,13 @@ const _sfc_main = {
         const all_pages = ref([]);
         const page_title = ref('');
         const page_body = ref('');
-        const formData = ref([]); // Changed to array instead of object
+        const formData = ref([]);
         const searchParams = new URLSearchParams(window.location.search);
         const rspJsonStr = ref("");
         const showCopiedPopup = ref(false);
         const optionsSet = ref([new Set([])]);
         const formHeadings = ref([]);
+        const prevResponses = ref([]);
 
         // Internal state variables
         let pageID = "";
@@ -168,7 +169,7 @@ const _sfc_main = {
         return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, showCopiedPopup, formHeadings, submitForm, debugButton, showInNewTab, copyToClipboard, openResource, };
 
         // Recursively find form fields in the data structure
-        function recursiveFind(obj, prepend = "", index = 0) {
+        function recursiveFind(obj, prepend = "", index = 0, ignoredKeys = ["other_resources"]) {
             if (!formData.value[index]) {
                 formData.value[index] = {};
             }
@@ -178,6 +179,10 @@ const _sfc_main = {
 
             let keys = Object.keys(obj);
             for (let i = 0; i < keys.length; i++) {
+                // Skip the key if it's in the ignoredKeys list
+                if (ignoredKeys.includes(keys[i])) {
+                    continue;
+                }
                 if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
                     recursiveFind(obj[keys[i]], prepend, index);
                 } else {
@@ -191,7 +196,7 @@ const _sfc_main = {
         }
 
         function allowUserInput(objToCheck) {
-            let valuesToCheck = ["reqAccountability", "$tool", "apiResponse"];
+            let valuesToCheck = ["reqAccountability", "$tool", "prevApiRsp", "apiResponse"];
             for (let i = 0; i < valuesToCheck.length; i++) {
                 if (objToCheck.includes(valuesToCheck[i])) {
                     return false;
@@ -202,12 +207,7 @@ const _sfc_main = {
 
         // Render page content and setup form
         async function render_page(page) {
-            // Reset form state
-            formData.value = [{}];
-            optionsSet.value = [new Set([])]; // Use .value to modify ref
-            rspJsonStr.value = "";
-            rawPageName = "";
-
+            clearValues();
             if (page === 'home') {
                 page_title.value = 'Tools';
                 page_body.value = 'Please select a tool on the left to get started!';
@@ -225,10 +225,10 @@ const _sfc_main = {
 
                             // Handle linked resources
                             item.other_resources.forEach((resource, index) => {
-                                optionsSet.value[index + 1] = new Set([]); // Use .value
+                                optionsSet.value[index + 1] = new Set([]);
                                 formData.value[index + 1] = {};
                                 formHeadings.value[index + 1] = resource.item.title;
-                                let result = recursiveFind(resource.item, `${index + 1}: `, index + 1);
+                                recursiveFind(resource.item, '', index + 1);
                             });
 
                             // Handle URL parameters
@@ -239,8 +239,6 @@ const _sfc_main = {
                             });
                         });
                     }
-                    console.log(formHeadings.value);
-                    //console.log(optionsSet.value[1]);
                 } catch (error) {
                     console.error(error);
                     page_title.value = "404: Not Found";
@@ -294,33 +292,61 @@ const _sfc_main = {
             }
         }
 
-        async function makeApiRequest() {
-            for (const term in formData.value) {
+        function clearValues() {
+            // Reset form state
+            formData.value = [{}];
+            optionsSet.value = [new Set([])];
+            rspJsonStr.value = "";
+            rawPageName = "";
+            prevResponses.value = [];
+        }
+
+        async function manageApiRequests() {
+            // Reset previous responses so they dont stack up if multiple requests are made without refreshing the page
+            prevResponses.value = [];
+            // This makes it so the final chained resource is shown as the final response and the others are in order in previous responses
+            // Not entirley sure how to fix, maybe add a check to see if there are multiple requests, and if so start from the seccond one and itterate through
+            // then come back and do the first one? 
+            for (const group in formData.value) {
+                var index = parseInt(group);
+                var apiHeading = formHeadings.value[index] || rawPageName;
+                await makeApiRequest(formData.value[index], index == formData.value.length - 1, apiHeading);
+            }        }
+
+        async function makeApiRequest(apiReqBody, finalReq, apiHeading) {
+            // I dont think this is actually used anywhere???
+            for (const term in apiReqBody) {
                 const groupNum = term.at(0);
                 if (formattedApiQuerys[groupNum] == null) {
                     formattedApiQuerys[groupNum] = [];
                 }
                 formattedApiQuerys[groupNum].push(term.slice(1));
-                //console.log(formattedApiQuerys);
+            }
+            let finalPrevRsp;
+            if (finalReq) {
+                finalPrevRsp = prevResponses.value;
             }
             let postReqData = {
-                "tool": rawPageName,
-                "body": formData.value,
+                "tool": apiHeading,
+                "body": apiReqBody,
                 "bypassTransform": bypassTransform,
+                "prevApiRsp": finalPrevRsp,
             };
 
-            await api.post(buildApiUrl(), postReqData).then((rsp) => {
+            await api.post(buildApiUrl(false, apiReqBody.title), postReqData).then((rsp) => {
                 let jsonRsp = rsp.data;
-                rspJsonStr.value = jsonRsp;
+                if (finalReq) {
+                    rspJsonStr.value = jsonRsp;
+                }
+                prevResponses.value.push(jsonRsp);
             }).catch((error) => {
                 console.log(error);
             });
         }
 
         function submitForm() {
-            console.log(formData.value);
             rspJsonStr.value = "...";
-            makeApiRequest();
+            manageApiRequests();
         }
 
         async function debugButton() {
@@ -343,11 +369,43 @@ const _sfc_main = {
         }
 
         async function showInNewTab() {
-            window.open(buildApiUrl(true));
+            await manageApiRequests();
+
+            // Create a new window
+            const newWindow = window.open('', '_blank');
+
+            // Ensure the new window is not null (in case of popup blockers)
+            if (newWindow) {
+                // Use JSON.stringify with formatting for readability
+                const formattedJson = JSON.stringify(rspJsonStr.value, null, 2);
+
+                // Write a formatted HTML page to display the JSON
+                newWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>JSON Response</title>
+                <style>
+                    body { 
+                        font-family: monospace; 
+                        white-space: pre; 
+                        background-color: #f4f4f4;
+                        padding: 20px;
+                    }
+                </style>
+            </head>
+            <body>${formattedJson}</body>
+            </html>
+        `);
+            } else {
+                // Handle popup blocker
+                alert('Popup blocked. Please allow popups for this site.');
+            }
         }
 
-        function buildApiUrl(getRequest = false) {
-            let url = '/tools/' + rawPageName;
+        function buildApiUrl(getRequest = false, pageName) {
+            let urlDestination = pageName || rawPageName;
+            let url = '/tools/' + urlDestination;
 
             if (getRequest) {
                 // only used for GET requests
@@ -367,7 +425,6 @@ const _sfc_main = {
         }
 
         function openResource() {
-            //console.log(pageID);
 
             try {
                 window.open("/admin/content/resources/" + pageID);
@@ -515,7 +572,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     ]), 1032 /* PROPS, DYNAMIC_SLOTS */, ["title"])
   ], 2112 /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-d269280a"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-9d9103b6"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',
