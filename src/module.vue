@@ -1,38 +1,52 @@
 <template>
+    <!-- Main view container -->
     <private-view :title="page_title">
+        <!-- Navigation sidebar -->
         <template #navigation>
             <page-navigation :current="page" :pages="all_pages" />
         </template>
-		<template #title-outer:append v-if="!isHomePage">
-			<v-icon name="open_in_new" @click="openResource" />
-		</template>
+        <!-- External link icon for non-home pages -->
+        <template #title-outer:append v-if="!isHomePage">
+            <v-icon name="open_in_new" @click="openResource" />
+        </template>
 
-		<div>
-			<transition name="fade">
-				<div v-if="showCopiedPopup" class="copied-popup">Copied!</div>
-			</transition>
-		</div>
+        <!-- Copied notification popup -->
+        <div>
+            <transition name="fade">
+                <div v-if="showCopiedPopup" class="copied-popup">Copied!</div>
+            </transition>
+        </div>
+
+        <!-- Router view for tools module -->
         <router-view name="tools-module" :page="page" />
+        <!-- Page description/body -->
         <div v-if="page_body" v-html="page_body" class="page-body"></div>
 
-        <div v-for="(origin, i) in optionsSet" :key="origin" class="form-group">
-			<div v-for="option in origin" :key="option" class="form-group">
-				<label :for="option">{{ option }}</label>
-				<textarea v-model="formData[i + option]" :id="option" class="form-control"></textarea>
-			</div>
-		</div>
-        
+        <div v-for="(formGroup, groupIndex) in formData" :key="groupIndex" class="form-group-container">
+            <!-- group headder for each linked resource -->
+            <h3 v-if="groupIndex > 0">Additional Resource {{ groupIndex }}: {{ formHeadings[groupIndex] }}</h3>
+
+            <!-- Form fields for this group -->
+            <div v-if="optionsSet[groupIndex]" class="form-group">
+                <div v-for="option in Array.from(optionsSet[groupIndex])" :key="option" class="form-field">
+                    <label :for="`${groupIndex}-${option}`">{{ option }}</label>
+                    <textarea v-model="formData[groupIndex][option]" :id="`${groupIndex}-${option}`"
+                        class="form-control">
+            </textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action buttons -->
         <button v-if="!isHomePage" @click="submitForm" class="btn btn-primary">Submit</button>
+        <button v-if="!isHomePage" @click="showInNewTab" class="btn btn-new-tab">Show In New Tab</button>
+        <button v-if="!isHomePage" @click="debugButton" class="btn btn-debug">Debug</button>
 
-		<button v-if="!isHomePage" @click="showInNewTab" class="btn btn-new-tab">Show In New Tab</button>
-
-		<button v-if="!isHomePage" @click="debugButton" class="btn btn-debug">Debug</button>
-
-		<div v-if="showJsonRsp" class="pre-container">
+        <!-- JSON response display -->
+        <div v-if="showJsonRsp" class="pre-container">
             <button @click="copyToClipboard" class="btn btn-copy"><v-icon name="content_copy" /></button>
             <pre class="wrapped-pre">{{ rspJsonStr }}</pre>
         </div>
-        
     </private-view>
 </template>
 
@@ -42,254 +56,264 @@ import { useApi } from '@directus/extensions-sdk';
 import PageNavigation from './components/navigation.vue';
 
 export default {
-	components: {
-		PageNavigation,
-	},
-	props: {
-		page: {
-			type: String,
-			default: 'home',
-		},
-	},
-	computed: {
-		isHomePage() {
-			return this.$props.page === 'home';
-		},
-		showJsonRsp() {
-			return this.rspJsonStr !== "";
-		},
-	},
-	setup(props) {
-		const api = useApi();
-		const all_pages = ref([]);
-		const page_title = ref('');
-		const page_body = ref('');
-		const formData = ref({});
-		const searchParams = new URLSearchParams(window.location.search);
-		let pageID = "";
-		let rawRequest = "";
-		let optionsSet = [new Set([1])];
-		let rspJsonStr = ref("");
-		let rawPageName = "";
-		let bypassTransform = false;
-		let showCopiedPopup = ref(false);
-		let formattedApiQuerys = [];
-		
-		render_page(props.page);
-		fetch_all_pages();
-		
-		watch(
-			() => props.page,
-			async () => {
-				render_page(props.page);
-			}
-		);
+    components: {
+        PageNavigation,
+    },
+    props: {
+        page: {
+            type: String,
+            default: 'home',
+        },
+    },
+    computed: {
+        isHomePage() {
+            return this.$props.page === 'home';
+        },
+        showJsonRsp() {
+            return this.rspJsonStr !== "";
+        },
+    },
+    setup(props) {
+        const api = useApi();
+        // State management using refs
+        const all_pages = ref([]);
+        const page_title = ref('');
+        const page_body = ref('');
+        const formData = ref([]); // Changed to array instead of object
+        const searchParams = new URLSearchParams(window.location.search);
+        const rspJsonStr = ref("");
+        const showCopiedPopup = ref(false);
+        const optionsSet = ref([new Set([])]);
+        const formHeadings = ref([]);
 
-		return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, showCopiedPopup, submitForm, debugButton, showInNewTab, copyToClipboard, openResource, };
+        // Internal state variables
+        let pageID = "";
+        let rawRequest = "";
+        let rawPageName = "";
+        let bypassTransform = false;
+        let formattedApiQuerys = [];
 
-		function recursiveFind(obj, prepend = "", index = 0) {
-			let keys = Object.keys(obj);
-			for (let i = 0; i < keys.length; i++) {
-				if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
-					//console.log("Recursing with: " + JSON.stringify(obj[keys[i]]));
-					recursiveFind(obj[keys[i]], prepend);	
-				} else {
-					//console.log("Attempting to add " + obj[keys[i]] + " With prepend: " + prepend);
-					let parseResult = parse_placeholders(obj[keys[i]]);
-					if (parseResult != null) {
-						if (allowUserInput(parseResult[0])) {
-							optionsSet[optionsSet.length - 1].add(`${prepend}${parseResult[0]}`);
-							formData.value[index + prepend + parseResult[0]] == null ? formData.value[index + prepend + parseResult[0]] = parseResult[1] : null;
-						}
-					}
-				}
-			}
-		}
+        render_page(props.page);
+        fetch_all_pages();
 
-		function allowUserInput(objToCheck) {
-			let valuesToCheck = ["reqAccountability", "$tool", "apiResponse"];
-			for (let i = 0; i < valuesToCheck.length; i++) {
-				if (objToCheck.includes(valuesToCheck[i])) {
-					return false;
-				}
-			}
-			return true;
-		}
+        watch(
+            () => props.page,
+            async () => {
+                render_page(props.page);
+            }
+        );
 
-		async function render_page(page) {
-			// Reset form fields and form data
-			formData.value = {};
-			optionsSet.length = 0;
-			optionsSet.push(new Set([]));
-			rspJsonStr.value = "";
-			rawPageName = "";
+        return { page_title, page_body, all_pages, formData, optionsSet, rspJsonStr, showCopiedPopup, formHeadings, submitForm, debugButton, showInNewTab, copyToClipboard, openResource, };
 
-			if (page === 'home') {
-				page_title.value = 'Tools';
-				page_body.value = 'Please select a tool on the left to get started!';
-			} else {
-				await api.get(`/items/resources?fields=*,retrieves.*,other_resources.*.*.*&filter[title][_eq]=${page}`).then((rsp) => {
-					if (rsp.data.data) {
-						rsp.data.data.forEach(item => {
-							rawPageName = item.title;
-							page_title.value = transformTitle(item.title);
-							page_body.value = item.description;
-							rawRequest = item.main;
-							recursiveFind(rsp.data.data[0]);
-							pageID = item.id;
-							item.other_resources.forEach((resource, index) => {
-								// This adds them to the the optionsSet, but they wont be used when sending (or may be sent all to one)
-								// Update optionsSet to an array or object of sets, incremnting on each linked resource
-								// Will make it easier to determine where to send the data
-								// Add way to call each one in order, waiting on response of last one (find way to show error if one fails)
-								// also need to share data between them
-								// find way to show them in directus when creating item - create placeholders for that specific situation??
-								optionsSet.push(new Set([]));
-								recursiveFind(resource.item, resource.item.title + ": ", index + 1);
-							});
-						searchParams.forEach((value, key) => {
-							if (optionsSet[0].has(key)) {
-								formData.value[0+key] = value;// dodgy fix, only puts in search params for first resource, not any chained ones
-							};
-						});
-					});
-					} else {
-						page_title.value = "404: Not Found";
-					}
-				}).catch((error) => {
-					console.log(error);
-				});
-			}
-		}
+        // Recursively find form fields in the data structure
+        function recursiveFind(obj, prepend = "", index = 0) {
+            if (!formData.value[index]) {
+                formData.value[index] = {};
+            }
+            if (!optionsSet.value[index]) {
+                optionsSet.value[index] = new Set([]);
+            }
 
-		function fetch_all_pages() {
-			// This and openResource are done dodgily, resources is hard coded
-			// works for now, will need to be updated to be dynamic when making renders
-			// Create invisible field in each item which has the name of the group (resources, renders, etc)??
-			api.get('/items/resources?fields=*,displayGroup.*').then((rsp) => {
-				all_pages.value = [];
-				rsp.data.data.forEach(item => {
-					let group = item.displayGroup;
-					if (group == null) {
-						group = "Misc";
-					}
+            let keys = Object.keys(obj);
+            for (let i = 0; i < keys.length; i++) {
+                if (obj[keys[i]] != null && typeof obj[keys[i]] == "object") {
+                    recursiveFind(obj[keys[i]], prepend, index);
+                } else {
+                    let parseResult = parse_placeholders(obj[keys[i]]);
+                    if (parseResult != null && allowUserInput(parseResult[0])) {
+                        optionsSet.value[index].add(`${prepend}${parseResult[0]}`);
+                        formData.value[index][prepend + parseResult[0]] == null ? formData.value[index][prepend + parseResult[0]] = parseResult[1] : null;
+                    }
+                }
+            }
+        }
 
-					all_pages.value.push({
-						label: transformTitle(item.title),
-						to: `/tools-module/${item.title}`,
-						group: group,
-						ID: item.id,
-					});
-				});
-			}).catch((error) => {
-				console.log(error);
-			});
-		}
+        function allowUserInput(objToCheck) {
+            let valuesToCheck = ["reqAccountability", "$tool", "apiResponse"];
+            for (let i = 0; i < valuesToCheck.length; i++) {
+                if (objToCheck.includes(valuesToCheck[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-		function transformTitle(title) {
+        // Render page content and setup form
+        async function render_page(page) {
+            // Reset form state
+            formData.value = [{}];
+            optionsSet.value = [new Set([])]; // Use .value to modify ref
+            rspJsonStr.value = "";
+            rawPageName = "";
+
+            if (page === 'home') {
+                page_title.value = 'Tools';
+                page_body.value = 'Please select a tool on the left to get started!';
+            } else {
+                try {
+                    const rsp = await api.get(`/items/resources?fields=*,retrieves.*,other_resources.*.*.*&filter[title][_eq]=${page}`);
+                    if (rsp.data.data) {
+                        rsp.data.data.forEach(item => {
+                            rawPageName = item.title;
+                            page_title.value = transformTitle(item.title);
+                            page_body.value = item.description;
+                            rawRequest = item.main;
+                            recursiveFind(rsp.data.data[0], "", 0);
+                            pageID = item.id;
+
+                            // Handle linked resources
+                            item.other_resources.forEach((resource, index) => {
+                                optionsSet.value[index + 1] = new Set([]); // Use .value
+                                formData.value[index + 1] = {};
+                                formHeadings.value[index + 1] = resource.item.title;
+                                let result = recursiveFind(resource.item, `${index + 1}: `, index + 1);
+                            });
+
+                            // Handle URL parameters
+                            searchParams.forEach((value, key) => {
+                                if (optionsSet.value[0].has(key)) {
+                                    formData.value[0][key] = value;
+                                }
+                            });
+                        });
+                    }
+                    console.log(formHeadings.value);
+                    //console.log(optionsSet.value[1]);
+                } catch (error) {
+                    console.error(error);
+                    page_title.value = "404: Not Found";
+                }
+            }
+        }
+
+        function fetch_all_pages() {
+            // This and openResource are done dodgily, resources is hard coded
+            // works for now, will need to be updated to be dynamic when making renders
+            // Create invisible field in each item which has the name of the group (resources, renders, etc)??
+            api.get('/items/resources?fields=*,displayGroup.*').then((rsp) => {
+                all_pages.value = [];
+                rsp.data.data.forEach(item => {
+                    let group = item.displayGroup;
+                    if (group == null) {
+                        group = "Misc";
+                    }
+
+                    all_pages.value.push({
+                        label: transformTitle(item.title),
+                        to: `/tools-module/${item.title}`,
+                        group: group,
+                        ID: item.id,
+                    });
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+
+        function transformTitle(title) {
             title = title.replace(/-/g, ' ');
             return title.charAt(0).toUpperCase() + title.slice(1);
         }
 
-		function parse_placeholders(text) {
-			const regex = /{(.*?)}/g; // Non-greedy match
-			let match;
-			const placeholders = [];
-			while ((match = regex.exec(text)) !== null) {
-				let parts = match[1].split(' ');
-				let path = parts[0];
-				placeholders.push(path);
-				placeholders.push(parts.slice(1).join(' '));
-			}
-			if (placeholders.length <= 0) {
-				return null;
-			} else {
-				return placeholders;
-			}
-		}
+        function parse_placeholders(text) {
+            const regex = /{(.*?)}/g; // Non-greedy match
+            let match;
+            const placeholders = [];
+            while ((match = regex.exec(text)) !== null) {
+                let parts = match[1].split(' ');
+                let path = parts[0];
+                placeholders.push(path);
+                placeholders.push(parts.slice(1).join(' '));
+            }
+            if (placeholders.length <= 0) {
+                return null;
+            } else {
+                return placeholders;
+            }
+        }
 
-		async function makeApiRequest() {
-			for (const term in formData.value) {
-				const groupNum = term.at(0);
-				if (formattedApiQuerys[groupNum] == null) {
-					formattedApiQuerys[groupNum] = [];
-				}
-				formattedApiQuerys[groupNum].push(term.slice(1));
-				console.log(formattedApiQuerys);
-			}
-			let postReqData = {
-				"tool": rawPageName,
-				"body": formData.value,
-				"bypassTransform": bypassTransform,
-			};
-			
-			await api.post(buildApiUrl(), postReqData).then((rsp) => {
-				let jsonRsp = rsp.data;
-				rspJsonStr.value = jsonRsp;
-			}).catch((error) => {
-				console.log(error);
-			});
-		}
+        async function makeApiRequest() {
+            for (const term in formData.value) {
+                const groupNum = term.at(0);
+                if (formattedApiQuerys[groupNum] == null) {
+                    formattedApiQuerys[groupNum] = [];
+                }
+                formattedApiQuerys[groupNum].push(term.slice(1));
+                //console.log(formattedApiQuerys);
+            }
+            let postReqData = {
+                "tool": rawPageName,
+                "body": formData.value,
+                "bypassTransform": bypassTransform,
+            };
 
-		function submitForm() {
-			console.log(formData.value);
-			rspJsonStr.value = "...";
-			makeApiRequest();
-		}
+            await api.post(buildApiUrl(), postReqData).then((rsp) => {
+                let jsonRsp = rsp.data;
+                rspJsonStr.value = jsonRsp;
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
 
-		async function debugButton() {
-			rspJsonStr.value = "...";
-			bypassTransform = true;
-			await makeApiRequest();
-			rspJsonStr.value = JSON.stringify(rspJsonStr.value, null, 2);
-			rspJsonStr.value += "\nForm Data: " + JSON.stringify(formData.value, null, 2);
-			rspJsonStr.value += "\nAPI URL: " + buildApiUrl();
-			rspJsonStr.value += "\nRaw Request: " + rawRequest;
-		}
+        function submitForm() {
+            console.log(formData.value);
+            rspJsonStr.value = "...";
+            makeApiRequest();
+        }
 
-		async function copyToClipboard() {
-			// pretty print copied text? if no, remove ,null, 2
-			navigator.clipboard.writeText(JSON.stringify(rspJsonStr.value, null, 2));
-			showCopiedPopup.value = true;
-			setTimeout(() => {
-				showCopiedPopup.value = false;
-			}, 1500); 
-		}
+        async function debugButton() {
+            rspJsonStr.value = "...";
+            bypassTransform = true;
+            await makeApiRequest();
+            rspJsonStr.value = JSON.stringify(rspJsonStr.value, null, 2);
+            rspJsonStr.value += "\nForm Data: " + JSON.stringify(formData.value, null, 2);
+            rspJsonStr.value += "\nAPI URL: " + buildApiUrl();
+            rspJsonStr.value += "\nRaw Request: " + rawRequest;
+        }
 
-		async function showInNewTab() {
-			window.open(buildApiUrl(true));
-		}
+        async function copyToClipboard() {
+            // pretty print copied text? if no, remove ,null, 2
+            navigator.clipboard.writeText(JSON.stringify(rspJsonStr.value, null, 2));
+            showCopiedPopup.value = true;
+            setTimeout(() => {
+                showCopiedPopup.value = false;
+            }, 1500);
+        }
 
-		function buildApiUrl(getRequest = false) {
-			let url = '/tools/' + rawPageName;
+        async function showInNewTab() {
+            window.open(buildApiUrl(true));
+        }
 
-			if (getRequest) {
-				// only used for GET requests
-				if (Object.keys(formData.value).length > 0) {
-					url += '?';
-					Object.keys(formData.value).forEach((key, index) => {
-						url += `${key}=${formData.value[key]}`;
-						if (index < Object.keys(formData.value).length - 1) {
-							url += '&';
-						}
-					});
-				}
-			}	
+        function buildApiUrl(getRequest = false) {
+            let url = '/tools/' + rawPageName;
 
-			// .replace only used when making GET request from here
-			return url.replace("$request.", "");
-		}
+            if (getRequest) {
+                // only used for GET requests
+                if (Object.keys(formData.value).length > 0) {
+                    url += '?';
+                    Object.keys(formData.value).forEach((key, index) => {
+                        url += `${key}=${formData.value[key]}`;
+                        if (index < Object.keys(formData.value).length - 1) {
+                            url += '&';
+                        }
+                    });
+                }
+            }
 
-		function openResource() {
-			//console.log(pageID);
-			
-			try {
-				window.open("/admin/content/resources/" + pageID);
-			} catch (error) {
-				rspJsonStr.value = "Error opening resource";
-			}
-		}
-	},
+            // .replace only used when making GET request from here
+            return url.replace("$request.", "");
+        }
+
+        function openResource() {
+            //console.log(pageID);
+
+            try {
+                window.open("/admin/content/resources/" + pageID);
+            } catch (error) {
+                rspJsonStr.value = "Error opening resource";
+            }
+        }
+    },
 };
 </script>
 
@@ -303,7 +327,7 @@ export default {
 
 .form-group {
     margin-bottom: 15px;
-	padding: 10px;
+    padding: 10px;
 }
 
 .form-group label {
@@ -317,11 +341,11 @@ export default {
     padding: 10px;
     border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));
     border-radius: var(--theme--border-radius);
-	background-color: var(--theme--background);
+    background-color: var(--theme--background);
 }
 
 .btn {
-	
+
 
     display: inline-block;
     padding: 10px 20px;
@@ -330,10 +354,10 @@ export default {
     text-align: center;
     cursor: pointer;
     border-radius: 4px;
-	background-color: var(--theme--primary);
-	color: var(--foreground-inverted);
+    background-color: var(--theme--primary);
+    color: var(--foreground-inverted);
     border: none;
-	margin: 10px;
+    margin: 10px;
 }
 
 .btn:hover {
@@ -341,7 +365,7 @@ export default {
 }
 
 .btn-debug {
-	float: right;
+    float: right;
 }
 
 .wrapped-pre {
@@ -356,12 +380,12 @@ export default {
 }
 
 .pre-container {
-	margin-left: 10px;
-	margin-right: 10px;
-	border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));
-	border-radius: var(--theme--border-radius);
+    margin-left: 10px;
+    margin-right: 10px;
+    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));
+    border-radius: var(--theme--border-radius);
     position: relative;
-	margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .btn-copy {
@@ -380,25 +404,25 @@ export default {
 }
 
 .copied-popup {
-  position: fixed;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: var(--theme--primary);
-  color: var(--foreground-inverted);
-  font-size: var(--v-button-font-size, 16px);
-  font-weight: var(--v-button-font-weight, 600);
-  padding: 10px 20px;
-  border-radius: var(--theme--border-radius);
-  z-index: 9999;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--theme--primary);
+    color: var(--foreground-inverted);
+    font-size: var(--v-button-font-size, 16px);
+    font-weight: var(--v-button-font-weight, 600);
+    padding: 10px 20px;
+    border-radius: var(--theme--border-radius);
+    z-index: 9999;
 }
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
 }
 
 .fade-enter-from,
 .fade-leave-to {
-  opacity: 0;
+    opacity: 0;
 }
 </style>
