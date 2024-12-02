@@ -114,7 +114,7 @@ var PageNavigation = /*#__PURE__*/_export_sfc(_sfc_main$1, [['render',_sfc_rende
 
 var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
-var css = "\n.page-body[data-v-9d9103b6] {\r\n    padding: 20px;\r\n    background-color: var(--theme--background);\r\n    border-radius: 8px;\r\n    margin-bottom: 20px;\n}\n.form-group[data-v-9d9103b6] {\r\n    margin-bottom: 15px;\r\n    padding: 10px;\n}\n.form-group label[data-v-9d9103b6] {\r\n    display: block;\r\n    margin-bottom: 5px;\r\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-9d9103b6] {\r\n    width: 100%;\r\n    padding: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n    background-color: var(--theme--background);\n}\n.btn[data-v-9d9103b6] {\r\n\r\n\r\n    display: inline-block;\r\n    padding: 10px 20px;\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    text-align: center;\r\n    cursor: pointer;\r\n    border-radius: 4px;\r\n    background-color: var(--theme--primary);\r\n    color: var(--foreground-inverted);\r\n    border: none;\r\n    margin: 10px;\n}\n.btn[data-v-9d9103b6]:hover {\r\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-9d9103b6] {\r\n    float: right;\n}\n.wrapped-pre[data-v-9d9103b6] {\r\n    white-space: pre-wrap;\r\n    word-wrap: break-word;\r\n    overflow-wrap: break-word;\r\n    max-width: 100%;\r\n    background-color: #0d1117;\r\n    padding: 10px;\r\n    border-radius: 4px;\r\n    margin-top: 20px;\n}\n.pre-container[data-v-9d9103b6] {\r\n    margin-left: 10px;\r\n    margin-right: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n    position: relative;\r\n    margin-bottom: 20px;\n}\n.btn-copy[data-v-9d9103b6] {\r\n    position: absolute;\r\n    right: 0px;\r\n    background-color: #21262e;\r\n    color: white;\r\n    border: none;\r\n    padding: 5px 10px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\n}\n.btn-copy[data-v-9d9103b6]:hover {\r\n    background-color: #30363d;\n}\n.copied-popup[data-v-9d9103b6] {\r\n    position: fixed;\r\n    left: 50%;\r\n    transform: translate(-50%, -50%);\r\n    background-color: var(--theme--primary);\r\n    color: var(--foreground-inverted);\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    padding: 10px 20px;\r\n    border-radius: var(--theme--border-radius);\r\n    z-index: 9999;\n}\n.fade-enter-active[data-v-9d9103b6],\r\n.fade-leave-active[data-v-9d9103b6] {\r\n    transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-9d9103b6],\r\n.fade-leave-to[data-v-9d9103b6] {\r\n    opacity: 0;\n}\r\n";
+var css = "\n.page-body[data-v-3c07fb17] {\r\n    padding: 20px;\r\n    background-color: var(--theme--background);\r\n    border-radius: 8px;\r\n    margin-bottom: 20px;\n}\n.form-group[data-v-3c07fb17] {\r\n    margin-bottom: 15px;\r\n    padding: 10px;\n}\n.form-group label[data-v-3c07fb17] {\r\n    display: block;\r\n    margin-bottom: 5px;\r\n    font-weight: var(--v-button-font-weight, 600);\n}\n.form-control[data-v-3c07fb17] {\r\n    width: 100%;\r\n    padding: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n    background-color: var(--theme--background);\n}\n.btn[data-v-3c07fb17] {\r\n\r\n\r\n    display: inline-block;\r\n    padding: 10px 20px;\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    text-align: center;\r\n    cursor: pointer;\r\n    border-radius: 4px;\r\n    background-color: var(--theme--primary);\r\n    color: var(--foreground-inverted);\r\n    border: none;\r\n    margin: 10px;\n}\n.btn[data-v-3c07fb17]:hover {\r\n    background-color: var(--theme--primary-accent);\n}\n.btn-debug[data-v-3c07fb17] {\r\n    float: right;\n}\n.wrapped-pre[data-v-3c07fb17] {\r\n    white-space: pre-wrap;\r\n    word-wrap: break-word;\r\n    overflow-wrap: break-word;\r\n    max-width: 100%;\r\n    background-color: #0d1117;\r\n    padding: 10px;\r\n    border-radius: 4px;\r\n    margin-top: 20px;\n}\n.pre-container[data-v-3c07fb17] {\r\n    margin-left: 10px;\r\n    margin-right: 10px;\r\n    border: var(--theme--border-width) solid var(--v-list-item-border-color, var(--theme--form--field--input--border-color));\r\n    border-radius: var(--theme--border-radius);\r\n    position: relative;\r\n    margin-bottom: 20px;\n}\n.btn-copy[data-v-3c07fb17] {\r\n    position: absolute;\r\n    right: 0px;\r\n    background-color: #21262e;\r\n    color: white;\r\n    border: none;\r\n    padding: 5px 10px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\n}\n.btn-copy[data-v-3c07fb17]:hover {\r\n    background-color: #30363d;\n}\n.copied-popup[data-v-3c07fb17] {\r\n    position: fixed;\r\n    left: 50%;\r\n    transform: translate(-50%, -50%);\r\n    background-color: var(--theme--primary);\r\n    color: var(--foreground-inverted);\r\n    font-size: var(--v-button-font-size, 16px);\r\n    font-weight: var(--v-button-font-weight, 600);\r\n    padding: 10px 20px;\r\n    border-radius: var(--theme--border-radius);\r\n    z-index: 9999;\n}\n.fade-enter-active[data-v-3c07fb17],\r\n.fade-leave-active[data-v-3c07fb17] {\r\n    transition: opacity 0.3s ease-in-out;\n}\n.fade-enter-from[data-v-3c07fb17],\r\n.fade-leave-to[data-v-3c07fb17] {\r\n    opacity: 0;\n}\r\n";
 n(css,{});
 
 const _sfc_main = {
@@ -154,7 +154,6 @@ const _sfc_main = {
         let rawRequest = "";
         let rawPageName = "";
         let bypassTransform = false;
-        let formattedApiQuerys = [];
 
         render_page(props.page);
         fetch_all_pages();
@@ -310,35 +309,26 @@ const _sfc_main = {
             for (const group in formData.value) {
                 var index = parseInt(group);
                 var apiHeading = formHeadings.value[index] || rawPageName;
+                rspJsonStr.value = "Performing request " + (index + 1) + "/" + formData.value.length + " for " + apiHeading;
                 await makeApiRequest(formData.value[index], index == formData.value.length - 1, apiHeading);
             }        }
 
         async function makeApiRequest(apiReqBody, finalReq, apiHeading) {
-            // I dont think this is actually used anywhere???
-            for (const term in apiReqBody) {
-                const groupNum = term.at(0);
-                if (formattedApiQuerys[groupNum] == null) {
-                    formattedApiQuerys[groupNum] = [];
-                }
-                formattedApiQuerys[groupNum].push(term.slice(1));
-            }
-            let finalPrevRsp;
-            if (finalReq) {
-                finalPrevRsp = prevResponses.value;
-            }
             let postReqData = {
                 "tool": apiHeading,
                 "body": apiReqBody,
                 "bypassTransform": bypassTransform,
-                "prevApiRsp": finalPrevRsp,
+                "prevResponses": prevResponses.value,
+                "finalReq": finalReq,
             };
+            console.log(prevResponses.value);
 
             await api.post(buildApiUrl(false, apiReqBody.title), postReqData).then((rsp) => {
                 let jsonRsp = rsp.data;
+                prevResponses.value.push(jsonRsp);
                 if (finalReq) {
                     rspJsonStr.value = jsonRsp;
                 }
-                prevResponses.value.push(jsonRsp);
             }).catch((error) => {
                 console.log(error);
             });
@@ -352,7 +342,7 @@ const _sfc_main = {
         async function debugButton() {
             rspJsonStr.value = "...";
             bypassTransform = true;
-            await makeApiRequest();
+            await manageApiRequests();
             rspJsonStr.value = JSON.stringify(rspJsonStr.value, null, 2);
             rspJsonStr.value += "\nForm Data: " + JSON.stringify(formData.value, null, 2);
             rspJsonStr.value += "\nAPI URL: " + buildApiUrl();
@@ -572,7 +562,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     ]), 1032 /* PROPS, DYNAMIC_SLOTS */, ["title"])
   ], 2112 /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */))
 }
-var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-9d9103b6"],['__file',"module.vue"]]);
+var ModuleComponent = /*#__PURE__*/_export_sfc(_sfc_main, [['render',_sfc_render],['__scopeId',"data-v-3c07fb17"],['__file',"module.vue"]]);
 
 var index = {
 	id: 'tools-module',

@@ -92,7 +92,6 @@ export default {
         let rawRequest = "";
         let rawPageName = "";
         let bypassTransform = false;
-        let formattedApiQuerys = [];
 
         render_page(props.page);
         fetch_all_pages();
@@ -248,36 +247,27 @@ export default {
             for (const group in formData.value) {
                 var index = parseInt(group);
                 var apiHeading = formHeadings.value[index] || rawPageName;
+                rspJsonStr.value = "Performing request " + (index + 1) + "/" + formData.value.length + " for " + apiHeading;
                 await makeApiRequest(formData.value[index], index == formData.value.length - 1, apiHeading);
             };
         }
 
         async function makeApiRequest(apiReqBody, finalReq, apiHeading) {
-            // I dont think this is actually used anywhere???
-            for (const term in apiReqBody) {
-                const groupNum = term.at(0);
-                if (formattedApiQuerys[groupNum] == null) {
-                    formattedApiQuerys[groupNum] = [];
-                }
-                formattedApiQuerys[groupNum].push(term.slice(1));
-            }
-            let finalPrevRsp;
-            if (finalReq) {
-                finalPrevRsp = prevResponses.value;
-            }
             let postReqData = {
                 "tool": apiHeading,
                 "body": apiReqBody,
                 "bypassTransform": bypassTransform,
-                "prevApiRsp": finalPrevRsp,
+                "prevResponses": prevResponses.value,
+                "finalReq": finalReq,
             };
+            console.log(prevResponses.value);
 
             await api.post(buildApiUrl(false, apiReqBody.title), postReqData).then((rsp) => {
                 let jsonRsp = rsp.data;
+                prevResponses.value.push(jsonRsp);
                 if (finalReq) {
                     rspJsonStr.value = jsonRsp;
                 }
-                prevResponses.value.push(jsonRsp);
             }).catch((error) => {
                 console.log(error);
             });
@@ -285,13 +275,13 @@ export default {
 
         function submitForm() {
             rspJsonStr.value = "...";
-            manageApiRequests(true);
+            manageApiRequests();
         }
 
         async function debugButton() {
             rspJsonStr.value = "...";
             bypassTransform = true;
-            await makeApiRequest();
+            await manageApiRequests();
             rspJsonStr.value = JSON.stringify(rspJsonStr.value, null, 2);
             rspJsonStr.value += "\nForm Data: " + JSON.stringify(formData.value, null, 2);
             rspJsonStr.value += "\nAPI URL: " + buildApiUrl();
